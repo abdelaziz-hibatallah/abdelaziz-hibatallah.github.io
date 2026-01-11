@@ -3,141 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ego | Private Room</title>
+    <title>The Ego | الغرفة الخاصة</title>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
+        /* تصميم "The Ego" المظلم */
         body {
-            background-color: #000; /* خلفية سوداء */
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace; /* خط يشبه الآلة الكاتبة */
+            background-color: #000;
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
         .container {
             text-align: center;
             width: 90%;
             max-width: 400px;
+            background: #0a0a0a;
+            padding: 25px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+        h1 { 
+            letter-spacing: 4px; 
+            font-size: 26px; 
+            margin-bottom: 30px; 
+            text-transform: uppercase;
         }
         input {
             background: #111;
             border: 1px solid #333;
             color: #fff;
-            padding: 10px;
-            margin: 5px;
-            width: 70%;
+            padding: 12px;
+            margin: 10px 0;
+            width: 85%;
             text-align: center;
             font-size: 16px;
+            border-radius: 2px;
+            outline: none;
+            transition: 0.3s;
         }
+        input:focus { border-color: #777; }
+        
         button {
             background: #fff;
             color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 30px;
             cursor: pointer;
             font-weight: bold;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            width: 100%;
         }
         button:hover { background: #ccc; }
-        
-        #chat-interface { display: none; width: 100%; }
-        #messages {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #333;
-            padding: 10px;
+
+        /* واجهة الدردشة */
+        #chat-interface { 
+            display: none; 
+            height: 85vh; 
+            flex-direction: column; 
+        }
+        #room-info {
+            color: #555;
+            font-size: 0.9em;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
             margin-bottom: 10px;
+        }
+        #messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #222;
+            padding: 15px;
+            margin-bottom: 15px;
             text-align: right;
             background: #050505;
         }
-        .msg { margin: 5px 0; border-bottom: 1px solid #222; padding: 5px; }
-        .sender { color: #888; font-size: 0.8em; }
+        /* شكل الرسالة */
+        .msg { margin: 8px 0; padding: 5px; border-bottom: 1px solid #1a1a1a; }
+        .sender { color: #888; font-size: 0.7em; display: block; margin-bottom: 4px; }
+        .text { font-size: 1em; color: #ddd; }
+        
+        /* شريط التمرير */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #333; }
     </style>
 </head>
 <body>
 
     <div id="login-interface" class="container">
         <h1>THE EGO</h1>
-        <p>أدخل هويتك والرمز السري</p>
-        <input type="text" id="username" placeholder="الاسم المستعار"><br>
-        <input type="password" id="pincode" maxlength="4" placeholder="****"><br><br>
+        <p style="color:#444; font-size:0.8em;">IDENTITY & PIN CODE</p>
+        
+        <input type="text" id="username" placeholder="الاسم (Identity)">
+        <input type="password" id="pincode" maxlength="4" placeholder="الكود (4 أرقام)">
+        
+        <br>
         <button onclick="enterRoom()">DÉGAGE (دخول)</button>
     </div>
 
     <div id="chat-interface" class="container">
-        <h2 id="room-title">الغرفة: </h2>
-        <div id="messages"></div>
-        <input type="text" id="msg-input" placeholder="اكتب رسالتك...">
+        <div id="room-info">غرفة سرية رقم: <span id="room-id-display"></span></div>
+        
+        <div id="messages">
+            </div>
+        
+        <input type="text" id="msg-input" placeholder="اكتب رسالتك..." onkeypress="handleEnter(event)">
         <button onclick="sendMessage()">إرسال</button>
+        <button onclick="location.reload()" style="background:transparent; color:#444; font-size:0.8em; margin-top:5px; border:1px solid #222;">خروج</button>
     </div>
 
     <script>
-        // -------------------------------------------------
-        // هام: يجب استبدال هذه المعلومات ببيانات مشروعك في Firebase
-        // -------------------------------------------------
+        // --- إعدادات Firebase الخاصة بمشروعك ---
         const firebaseConfig = {
-            apiKey: "ضع_API_KEY_هنا",
-            authDomain: "اسم_مشروعك.firebaseapp.com",
-            databaseURL: "https://اسم_مشروعك-default-rtdb.firebaseio.com",
-            projectId: "اسم_مشروعك",
-            storageBucket: "اسم_مشروعك.appspot.com",
-            messagingSenderId: "رقم_هنا",
-            appId: "رقم_التطبيق_هنا"
+            apiKey: "AIzaSyBwRtHgM5cBTxci9ffzMOPp9POTTy-PbWE",
+            authDomain: "theegochat.firebaseapp.com",
+            // ملاحظة: أضفت هذا الرابط لأنه ضروري، وهو يعتمد على اسم مشروعك
+            databaseURL: "https://theegochat-default-rtdb.firebaseio.com",
+            projectId: "theegochat",
+            storageBucket: "theegochat.firebasestorage.app",
+            messagingSenderId: "256766104582",
+            appId: "1:256766104582:web:90ce5a80e009d108529f87",
+            measurementId: "G-BXH9KEHN76"
         };
 
-        // تهيئة Firebase
+        // --- تهيئة التطبيق ---
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
 
+        // متغيرات
         let currentRoom = "";
         let currentUser = "";
 
+        // دالة الدخول
         function enterRoom() {
-            const name = document.getElementById('username').value;
-            const pin = document.getElementById('pincode').value;
+            const name = document.getElementById('username').value.trim();
+            const pin = document.getElementById('pincode').value.trim();
 
             if (name && pin.length === 4) {
                 currentUser = name;
                 currentRoom = pin;
                 
+                // تبديل الواجهة
                 document.getElementById('login-interface').style.display = 'none';
-                document.getElementById('chat-interface').style.display = 'block';
-                document.getElementById('room-title').innerText = "غرفة رقم: " + pin;
+                document.getElementById('chat-interface').style.display = 'flex';
+                document.getElementById('room-id-display').innerText = pin;
 
+                // تحميل الرسائل
                 loadMessages();
             } else {
-                alert("المرجو إدخال الاسم ورمز مكون من 4 أرقام");
+                alert("يرجى كتابة الاسم وكود من 4 أرقام");
             }
         }
 
+        // دالة إرسال الرسالة
         function sendMessage() {
             const msgInput = document.getElementById('msg-input');
-            const msg = msgInput.value;
+            const msg = msgInput.value.trim();
 
-            if (msg.trim() !== "") {
+            if (msg !== "") {
                 db.ref('rooms/' + currentRoom).push({
                     name: currentUser,
                     text: msg,
-                    timestamp: Date.now()
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
-                msgInput.value = "";
+                msgInput.value = ""; // إفراغ الحقل
             }
         }
 
+        // الإرسال عند ضغط Enter
+        function handleEnter(e) {
+            if(e.key === 'Enter') sendMessage();
+        }
+
+        // دالة تحميل الرسائل وعرضها
         function loadMessages() {
             const messagesDiv = document.getElementById('messages');
-            db.ref('rooms/' + currentRoom).on('child_added', function(snapshot) {
+            
+            // الاستماع للرسائل الجديدة في هذه الغرفة فقط
+            db.ref('rooms/' + currentRoom).limitToLast(50).on('child_added', function(snapshot) {
                 const data = snapshot.val();
+                
+                // إنشاء عنصر الرسالة
                 const msgElement = document.createElement('div');
                 msgElement.classList.add('msg');
-                msgElement.innerHTML = `<span class="sender">${data.name}:</span> ${data.text}`;
+                msgElement.innerHTML = `
+                    <span class="sender">${data.name}</span> 
+                    <span class="text">${data.text}</span>
+                `;
+                
                 messagesDiv.appendChild(msgElement);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight; // النزول لآخر رسالة
+                // النزول لأسفل تلقائياً لرؤية آخر رسالة
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
         }
     </script>
