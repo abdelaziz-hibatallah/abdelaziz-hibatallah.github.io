@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The EGO - Interactive</title>
+    <title>The EGO - Zodiac Analyzer</title>
     <style>
-        /* --- CSS (التصميم) --- */
+        /* --- CSS (التصميم الفخم) --- */
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@700&display=swap');
 
         :root {
-            --bg-color: #0a0a0a;
-            --card-color: #141414;
+            --bg-color: #050505;
+            --card-bg: #111;
             --gold: #d4af37;
+            --gold-dim: #8a701e;
             --text: #e0e0e0;
         }
 
@@ -19,157 +20,394 @@
             background-color: var(--bg-color);
             color: var(--text);
             font-family: 'Amiri', serif;
-            text-align: center;
             margin: 0;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-top: 5px solid var(--gold);
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            position: relative;
+            border-radius: 4px;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
             color: var(--gold);
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 10px;
-            letter-spacing: 5px;
             text-transform: uppercase;
+            letter-spacing: 5px;
         }
 
-        .container {
-            background-color: var(--card-color);
-            border: 1px solid #333;
-            border-top: 4px solid var(--gold);
-            padding: 40px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            border-radius: 5px;
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-style: italic;
         }
 
-        .question {
-            font-size: 1.5rem;
+        /* شريط التقدم */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
             margin-bottom: 30px;
-            min-height: 60px;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* الأسئلة والأجوبة */
+        .question {
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            min-height: 80px;
+            animation: fadeIn 0.5s ease;
         }
 
         .options {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 15px;
         }
 
         button {
-            background-color: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
+            background: transparent;
+            border: 1px solid var(--gold-dim);
+            color: var(--text);
             padding: 15px;
             font-size: 1.2rem;
             font-family: 'Amiri', serif;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            text-align: center;
         }
 
         button:hover {
-            background-color: var(--gold);
+            background: var(--gold);
             color: #000;
+            border-color: var(--gold);
             transform: scale(1.02);
         }
 
-        .hidden { display: none; }
-        
-        #result {
-            font-size: 1.8rem;
-            color: var(--gold);
-            animation: fadeIn 2s;
+        /* صفحة النتيجة */
+        #result-screen {
+            display: none;
+            animation: fadeIn 1s ease;
         }
 
+        .zodiac-sign {
+            font-size: 4rem;
+            color: var(--gold);
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .analysis {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #ccc;
+            text-align: justify;
+            margin-top: 20px;
+        }
+
+        /* تنسيق الشعار الجديد */
+        .signature {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            font-size: 1rem;
+            color: var(--gold-dim);
+            font-family: 'Playfair Display', serif; /* خط إنجليزي كلاسيكي */
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .hidden { display: none; }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (min-width: 600px) {
+            .options { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <h1>The EGO</h1>
+    <div class="container">
+        <header>
+            <h1>The EGO</h1>
+            <div class="subtitle">كاشف الأبراج النفسي</div>
+        </header>
 
-    <div class="container" id="quiz-box">
-        <div class="question" id="question-text">هل تفضل السيطرة أم الحرية؟</div>
-        
-        <div class="options">
-            <button onclick="nextQuestion(1)">السيطرة المطلقة</button>
-            <button onclick="nextQuestion(2)">الحرية الفردية</button>
+        <div id="quiz-screen">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
+            <div class="options" id="options-container">
+                </div>
+        </div>
+
+        <div id="result-screen">
+            <h2>شخصيتك تطابق برج:</h2>
+            <div class="zodiac-sign" id="zodiac-result">...</div>
+            <div class="analysis" id="analysis-text"></div>
+            <br>
+            <button onclick="location.reload()">إعادة التحليل</button>
+
+            <div class="signature">
+                solo group C et ga3 les group khrin W.9
+            </div>
         </div>
     </div>
 
-    <div class="container hidden" id="result-box">
-        <div id="result"></div>
-        <br>
-        <button onclick="location.reload()">إعادة الاختبار</button>
-    </div>
-
     <script>
-        /* --- JavaScript (التفاعل) --- */
-        
-        // قائمة الأسئلة (يمكنك تغيير النصوص هنا)
+        /* --- قاعدة البيانات (الأسئلة ومنطق الأبراج) --- */
+        // Types: F=Fire (نار), E=Earth (تراب), A=Air (هواء), W=Water (ماء)
         const questions = [
             {
-                text: "في مواجهة الفوضى، ماذا يختار الـ 'أنا' الخاص بك؟",
-                optionA: "فرض النظام بالقوة",
-                optionB: "التكيف مع الفوضى"
+                text: "عندما تواجه مشكلة كبيرة ومفاجئة، ما هو أول رد فعل لك؟",
+                options: [
+                    { text: "أواجهها فوراً وبقوة وغضب", type: "F" },
+                    { text: "أحللها بهدوء وأبحث عن حل منطقي", type: "E" },
+                    { text: "أناقشها مع الآخرين لأخذ آرائهم", type: "A" },
+                    { text: "أشعر بالقلق وأنعزل لأفكر", type: "W" }
+                ]
             },
             {
-                text: "هل التاريخ يصنعه الأفراد أم الجماعات؟",
-                optionA: "فرد واحد قوي",
-                optionB: "إرادة الجماعة"
+                text: "في تجمع اجتماعي كبير، أين تجد نفسك؟",
+                options: [
+                    { text: "في المركز، أقود الحديث وأضحك بصوت عالٍ", type: "F" },
+                    { text: "أجلس بهدوء أراقب المكان أو أتحدث بجدية", type: "E" },
+                    { text: "أتنقل بين المجموعات وأتعرف على الجميع", type: "A" },
+                    { text: "مع صديق واحد مقرب في زاوية هادئة", type: "W" }
+                ]
             },
             {
-                text: "ما هي غايتك النهائية؟",
-                optionA: "الخلود في الذاكرة",
-                optionB: "السلام الداخلي"
+                text: "ما هو الشيء الذي يحفزك أكثر في الحياة؟",
+                options: [
+                    { text: "التحدي، الشهرة، والفوز", type: "F" },
+                    { text: "المال، الاستقرار، والإنجاز الملموس", type: "E" },
+                    { text: "المعرفة، الأفكار الجديدة، والحرية", type: "A" },
+                    { text: "الحب، المشاعر العميقة، والروحانيات", type: "W" }
+                ]
+            },
+            {
+                text: "كيف تتعامل مع المال؟",
+                options: [
+                    { text: "أصرفه بسرعة للاستمتاع باللحظة", type: "F" },
+                    { text: "أديره بحكمة وأخطط للمستقبل بدقة", type: "E" },
+                    { text: "أصرفه على التجارب والسفر والكتب", type: "A" },
+                    { text: "أصرفه حسب حالتي المزاجية وكرمي مع من أحب", type: "W" }
+                ]
+            },
+            {
+                text: "ما هو الصفة التي يكرهها الناس فيك أحياناً؟",
+                options: [
+                    { text: "التسرع والعصبية", type: "F" },
+                    { text: "العناد والبرود", type: "E" },
+                    { text: "التردد وتقلب المزاج", type: "A" },
+                    { text: "الحساسية المفرطة والغموض", type: "W" }
+                ]
+            },
+            {
+                text: "كيف تصف طريقة تفكيرك؟",
+                options: [
+                    { text: "سريعة، حدسية، وجريئة", type: "F" },
+                    { text: "واقعية، عملية، ومنظمة", type: "E" },
+                    { text: "تحليلية، مبتكرة، ومتشعبة", type: "A" },
+                    { text: "خياية، عاطفية، وعميقة", type: "W" }
+                ]
+            },
+            {
+                text: "في الحب، أنت تبحث عن...",
+                options: [
+                    { text: "شريك يشاركني المغامرة والشغف", type: "F" },
+                    { text: "شريك يوفر لي الأمان والاستقرار والوفاء", type: "E" },
+                    { text: "شريك ذكي يحاور عقلي ويفهمني", type: "A" },
+                    { text: "شريك يندمج مع روحي ويشعر بي دون كلام", type: "W" }
+                ]
+            },
+            {
+                text: "لو كنت ملكاً، كيف ستحكم مملكتك؟",
+                options: [
+                    { text: "بقوة وسيطرة وتوسعات عسكرية", type: "F" },
+                    { text: "بتنظيم الاقتصاد وبناء صروح تدوم", type: "E" },
+                    { text: "بالعدل والديمقراطية ونشر العلوم", type: "A" },
+                    { text: "بالرحمة ومساعدة الضعفاء والفنون", type: "W" }
+                ]
+            },
+            {
+                text: "أي من هذه الكلمات تصف 'الأنا' الخاصة بك؟",
+                options: [
+                    { text: "أنا الأقوى", type: "F" },
+                    { text: "أنا الأثبت", type: "E" },
+                    { text: "أنا الأذكى", type: "A" },
+                    { text: "أنا الأعمق", type: "W" }
+                ]
+            },
+            {
+                text: "ما هو أسوأ كابوس بالنسبة لك؟",
+                options: [
+                    { text: "أن يتم تجاهلي أو أكون ضعيفاً", type: "F" },
+                    { text: "الفوضى وفقدان ممتلكاتي", type: "E" },
+                    { text: "الملل والقيود وفقدان الحرية", type: "A" },
+                    { text: "الخيانة وجرح المشاعر", type: "W" }
+                ]
+            },
+            {
+                text: "كيف تنتقم ممن ظلمك؟",
+                options: [
+                    { text: "مواجهة مباشرة وفورية", type: "F" },
+                    { text: "أتجاهله تماماً وأنجح بدونه (النجاح أفضل انتقام)", type: "E" },
+                    { text: "أستخدم ذكائي وكلماتي لأحرجه", type: "A" },
+                    { text: "أكتم الأمر ولكني لا أنسى أبداً وقد ألدغ لاحقاً", type: "W" }
+                ]
+            },
+            {
+                text: "اختار لوناً ينجذب له بصرك:",
+                options: [
+                    { text: "الأحمر أو البرتقالي الناري", type: "F" },
+                    { text: "البني أو الأخضر الداكن", type: "E" },
+                    { text: "الأزرق السماوي أو الأصفر", type: "A" },
+                    { text: "النيلي أو البنفسجي أو الأسود", type: "W" }
+                ]
+            },
+            {
+                text: "ما هو نوع الأفلام الذي تفضله؟",
+                options: [
+                    { text: "الأكشن والمغامرات", type: "F" },
+                    { text: "الوثائقية أو القصص الواقعية", type: "E" },
+                    { text: "الخيال العلمي والغموض", type: "A" },
+                    { text: "الدراما والرومانسية النفسية", type: "W" }
+                ]
+            },
+            {
+                text: "كيف تتعامل مع القواعد والقوانين؟",
+                options: [
+                    { text: "القواعد وضعت لكي تُكسر", type: "F" },
+                    { text: "أحترمها لأنها تحافظ على النظام", type: "E" },
+                    { text: "أناقشها وأحاول تغيير ما لا يعجبني", type: "A" },
+                    { text: "أتبع ما يمليه علي ضميري وإحساسي فقط", type: "W" }
+                ]
+            },
+            {
+                text: "سؤال أخير: هل تؤمن بالأبراج؟",
+                options: [
+                    { text: "نعم، لأنني أشعر بصفاتي فيها", type: "F" },
+                    { text: "أشك، أحتاج لإثبات ملموس", type: "E" },
+                    { text: "موضوع مثير للجدل والنقاش", type: "A" },
+                    { text: "نعم، هناك رابط روحي بيننا وبين الكون", type: "W" }
+                ]
             }
         ];
 
-        let currentStep = 0;
-        let egoScore = 0; // مقياس بسيط لتحليل الشخصية
+        let currentQuestion = 0;
+        let scores = { F: 0, E: 0, A: 0, W: 0 };
 
-        function nextQuestion(choice) {
-            // 1 تعني الخيار الأول (أكثر سلطة)، 2 تعني الخيار الثاني
-            if(choice === 1) egoScore++;
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById("question-text").innerText = q.text;
             
-            // ننتقل للسؤال التالي
-            if (currentStep < questions.length) {
-                document.getElementById('question-text').innerText = questions[currentStep].text;
-                // تحديث نصوص الأزرار
-                const buttons = document.querySelectorAll('.options button');
-                buttons[0].innerText = questions[currentStep].optionA;
-                buttons[0].setAttribute('onclick', 'nextQuestion(1)');
-                
-                buttons[1].innerText = questions[currentStep].optionB;
-                buttons[1].setAttribute('onclick', 'nextQuestion(2)');
-                
-                currentStep++;
+            const optionsDiv = document.getElementById("options-container");
+            optionsDiv.innerHTML = ""; // مسح الأزرار القديمة
+
+            // خلط الإجابات عشوائياً حتى لا يكون الترتيب ثابتاً
+            let shuffledOptions = q.options.sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.innerText = opt.text;
+                btn.onclick = () => handleAnswer(opt.type);
+                optionsDiv.appendChild(btn);
+            });
+
+            // تحديث شريط التقدم
+            let progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById("progress").style.width = progress + "%";
+        }
+
+        function handleAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                loadQuestion();
             } else {
                 showResult();
             }
         }
 
         function showResult() {
-            // إخفاء صندوق الأسئلة وإظهار النتيجة
-            document.getElementById('quiz-box').classList.add('hidden');
-            document.getElementById('result-box').classList.remove('hidden');
-            
-            const resultText = document.getElementById('result');
-            
-            if (egoScore >= 2) {
-                resultText.innerText = "تحليلك: 'الأنا الحاكم'. أنت تميل للسلطة والنظام وترى العالم كمسرح لإرادتك.";
-            } else {
-                resultText.innerText = "تحليلك: 'الأنا الحر'. أنت تقدس الاستقلالية وترى القوة في المرونة لا في الجمود.";
-            }
-        }
-    </script>
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.querySelector("header").style.display = "none"; // إخفاء الهيدر للتركيز
 
+            // تحديد العنصر الفائز
+            let maxScore = 0;
+            let element = "";
+            for (let type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    element = type;
+                }
+            }
+
+            let resultTitle = "";
+            let resultDesc = "";
+
+            // تحليل النتيجة وتوقع البرج
+            if (element === "F") {
+                // ناري
+                const signs = ["الحمل (Aries)", "الأسد (Leo)", "القوس (Sagittarius)"];
+                const randomSign = signs[Math.floor(Math.random() * signs.length)];
+                resultTitle = randomSign;
+                resultDesc = "شخصيتك نارية بامتياز! أنت تملك طاقة هائلة، قيادي بالفطرة، وجريء. يغلب عليك الشغف والتسرع أحياناً، لكن قلبك طيب ومخلص. تتوافق إجاباتك بشدة مع صفات الأبراج النارية.";
+            } else if (element === "E") {
+                // ترابي
+                const signs = ["الثور (Taurus)", "العذراء (Virgo)", "الجدي (Capricorn)"];
+                const randomSign = signs[Math.floor(Math.random() * signs.length)];
+                resultTitle = randomSign;
+                resultDesc = "شخصيتك ترابية. أنت إنسان واقعي، عملي، وتبحث عن الاستقرار. لا تنجرف وراء الأوهام وتعرف قيمة المال والعمل الجاد. أنت صخرة يعتمد عليها الآخرون. تتوافق إجاباتك مع الأبراج الترابية.";
+            } else if (element === "A") {
+                // هوائي
+                const signs = ["الجوزاء (Gemini)", "الميزان (Libra)", "الدلو (Aquarius)"];
+                const randomSign = signs[Math.floor(Math.random() * signs.length)];
+                resultTitle = randomSign;
+                resultDesc = "شخصيتك هوائية. أنت مفكر، اجتماعي، وتحب الحرية فوق كل شيء. تكره الروتين ولديك قدرة رائعة على التواصل وتحليل الأمور بذكاء. تتوافق إجاباتك مع الأبراج الهوائية.";
+            } else {
+                // مائي (أو تعادل) - Default to Water if undefined
+                const signs = ["السرطان (Cancer)", "العقرب (Scorpio)", "الحوت (Pisces)"];
+                const randomSign = signs[Math.floor(Math.random() * signs.length)];
+                resultTitle = randomSign;
+                resultDesc = "شخصيتك مائية. أنت عميق جداً، عاطفي، وتملك حدساً قوياً يكاد يقرأ الأفكار. ظاهرك هادئ لكن داخلك محيط من المشاعر والأسرار. تتوافق إجاباتك بشدة مع الأبراج المائية.";
+            }
+
+            document.getElementById("zodiac-result").innerText = resultTitle;
+            document.getElementById("analysis-text").innerText = resultDesc;
+        }
+
+        // بدء التطبيق
+        loadQuestion();
+
+    </script>
 </body>
 </html>
