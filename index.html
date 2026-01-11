@@ -6,7 +6,7 @@
     <title>The EGO - Zodiac Analyzer</title>
     <style>
         /* --- CSS (التصميم الفخم) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@700&family=Cairo:wght@400;700&display=swap');
 
         :root {
             --bg-color: #050505;
@@ -19,7 +19,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text);
-            font-family: 'Amiri', serif;
+            font-family: 'Cairo', 'Amiri', serif; /* Cairo للوضوح في اللغات المتعددة */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -27,6 +27,7 @@
             min-height: 100vh;
             text-align: center;
             overflow-x: hidden;
+            transition: all 0.5s ease;
         }
 
         .container {
@@ -57,6 +58,26 @@
             font-style: italic;
         }
 
+        /* شاشة اختيار اللغة */
+        .lang-btn {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 20px;
+            font-size: 1.2rem;
+            border: 1px solid #333;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Playfair Display', 'Cairo', serif;
+        }
+        .lang-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
         /* شريط التقدم */
         .progress-bar {
             width: 100%;
@@ -74,7 +95,7 @@
 
         /* الأسئلة والأجوبة */
         .question {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 30px;
             line-height: 1.6;
             min-height: 80px;
@@ -87,19 +108,19 @@
             gap: 15px;
         }
 
-        button {
+        .option-btn {
             background: transparent;
             border: 1px solid var(--gold-dim);
             color: var(--text);
             padding: 15px;
-            font-size: 1.2rem;
-            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            font-family: inherit;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
         }
 
-        button:hover {
+        .option-btn:hover {
             background: var(--gold);
             color: #000;
             border-color: var(--gold);
@@ -107,36 +128,34 @@
         }
 
         /* صفحة النتيجة */
-        #result-screen {
-            display: none;
-            animation: fadeIn 1s ease;
-        }
-
         .zodiac-sign {
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--gold);
             margin: 20px 0;
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            font-family: 'Playfair Display', serif;
         }
 
         .analysis {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1.8;
             color: #ccc;
             text-align: justify;
             margin-top: 20px;
+            padding: 0 10px;
         }
 
-        /* تنسيق الشعار الجديد */
+        /* تنسيق الشعار (ثابت) */
         .signature {
             margin-top: 50px;
             padding-top: 20px;
             border-top: 1px solid #222;
             font-size: 1rem;
             color: var(--gold-dim);
-            font-family: 'Playfair Display', serif; /* خط إنجليزي كلاسيكي */
+            font-family: 'Playfair Display', serif;
             letter-spacing: 1px;
             opacity: 0.8;
+            direction: ltr !important; /* دائماً من اليسار لليمين */
         }
 
         .hidden { display: none; }
@@ -154,24 +173,30 @@
 <body>
 
     <div class="container">
-        <header>
+        
+        <header id="main-header">
             <h1>The EGO</h1>
-            <div class="subtitle">كاشف الأبراج النفسي</div>
+            <div class="subtitle" id="subtitle">Zodiac & Personality Analyzer</div>
         </header>
 
-        <div id="quiz-screen">
-            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-            <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
-            <div class="options" id="options-container">
-                </div>
+        <div id="lang-screen">
+            <button class="lang-btn" onclick="setLanguage('ar')">الـعربـيـة</button>
+            <button class="lang-btn" onclick="setLanguage('en')">English</button>
+            <button class="lang-btn" onclick="setLanguage('fr')">Français</button>
         </div>
 
-        <div id="result-screen">
-            <h2>شخصيتك تطابق برج:</h2>
-            <div class="zodiac-sign" id="zodiac-result">...</div>
+        <div id="quiz-screen" class="hidden">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <div class="question" id="question-text"></div>
+            <div class="options" id="options-container"></div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2 id="result-title"></h2>
+            <div class="zodiac-sign" id="zodiac-result"></div>
             <div class="analysis" id="analysis-text"></div>
             <br>
-            <button onclick="location.reload()">إعادة التحليل</button>
+            <button class="option-btn" style="width: 100%" onclick="location.reload()" id="restart-btn">Restart</button>
 
             <div class="signature">
                 solo group C et ga3 les group khrin W.9
@@ -180,168 +205,225 @@
     </div>
 
     <script>
-        /* --- قاعدة البيانات (الأسئلة ومنطق الأبراج) --- */
-        // Types: F=Fire (نار), E=Earth (تراب), A=Air (هواء), W=Water (ماء)
-        const questions = [
+        /* --- بيانات اللغات والأسئلة --- */
+        
+        let currentLang = 'ar'; // Default
+
+        const uiText = {
+            ar: { subtitle: "كاشف الأبراج النفسي", resultTitle: "شخصيتك تطابق برج:", restart: "إعادة التحليل" },
+            en: { subtitle: "Zodiac Personality Analyzer", resultTitle: "Your personality matches:", restart: "Restart Analysis" },
+            fr: { subtitle: "Analyseur de Personnalité du Zodiaque", resultTitle: "Votre personnalité correspond à :", restart: "Recommencer l'analyse" }
+        };
+
+        const analysisText = {
+            F: {
+                ar: "شخصيتك نارية بامتياز! أنت تملك طاقة هائلة، قيادي بالفطرة، وجريء. يغلب عليك الشغف والتسرع أحياناً، لكن قلبك طيب ومخلص.",
+                en: "You have a fiery personality! You possess immense energy, are a natural born leader, and bold. Passion drives you, sometimes to impulsiveness, but your heart is loyal.",
+                fr: "Vous avez une personnalité de feu ! Vous possédez une énergie immense, êtes un leader né et audacieux. La passion vous guide, parfois jusqu'à l'impulsivité, mais votre cœur est loyal."
+            },
+            E: {
+                ar: "شخصيتك ترابية. أنت إنسان واقعي، عملي، وتبحث عن الاستقرار. لا تنجرف وراء الأوهام وتعرف قيمة العمل الجاد. أنت صخرة يعتمد عليها الآخرون.",
+                en: "You have an earthy personality. You are realistic, practical, and seek stability. You are not swayed by illusions and know the value of hard work. You are a rock others rely on.",
+                fr: "Vous avez une personnalité de terre. Vous êtes réaliste, pragmatique et cherchez la stabilité. Vous connaissez la valeur du travail acharné. Vous êtes un roc sur lequel les autres comptent."
+            },
+            A: {
+                ar: "شخصيتك هوائية. أنت مفكر، اجتماعي، وتحب الحرية فوق كل شيء. تكره الروتين ولديك قدرة رائعة على التواصل وتحليل الأمور بذكاء.",
+                en: "You have an airy personality. You are a thinker, social, and value freedom above all. You hate routine and have an amazing ability to communicate and analyze things intelligently.",
+                fr: "Vous avez une personnalité d'air. Vous êtes un penseur, social et chérissez la liberté par-dessus tout. Vous détestez la routine et avez une capacité incroyable à communiquer et analyser."
+            },
+            W: {
+                ar: "شخصيتك مائية. أنت عميق جداً، عاطفي، وتملك حدساً قوياً. ظاهرك هادئ لكن داخلك محيط من المشاعر والأسرار.",
+                en: "You have a watery personality. You are very deep, emotional, and possess strong intuition. You appear calm, but inside is an ocean of feelings and secrets.",
+                fr: "Vous avez une personnalité d'eau. Vous êtes très profond, émotionnel et possédez une forte intuition. Vous semblez calme, mais à l'intérieur se trouve un océan de sentiments."
+            }
+        };
+
+        const questionsData = [
             {
-                text: "عندما تواجه مشكلة كبيرة ومفاجئة، ما هو أول رد فعل لك؟",
+                text: { ar: "عندما تواجه مشكلة كبيرة ومفاجئة، ما هو أول رد فعل لك؟", en: "When facing a sudden big problem, what is your first reaction?", fr: "Face à un problème soudain, quelle est votre première réaction ?" },
                 options: [
-                    { text: "أواجهها فوراً وبقوة وغضب", type: "F" },
-                    { text: "أحللها بهدوء وأبحث عن حل منطقي", type: "E" },
-                    { text: "أناقشها مع الآخرين لأخذ آرائهم", type: "A" },
-                    { text: "أشعر بالقلق وأنعزل لأفكر", type: "W" }
+                    { type: "F", text: { ar: "أواجهها فوراً وبقوة", en: "Face it instantly with force", fr: "L'affronter immédiatement avec force" } },
+                    { type: "E", text: { ar: "أحللها بهدوء ومنطق", en: "Analyze it calmly and logically", fr: "L'analyser calmement et logiquement" } },
+                    { type: "A", text: { ar: "أناقشها مع الآخرين", en: "Discuss it with others", fr: "En discuter avec les autres" } },
+                    { type: "W", text: { ar: "أشعر بالقلق وأنعزل", en: "Feel anxious and withdraw", fr: "Se sentir anxieux et s'isoler" } }
                 ]
             },
             {
-                text: "في تجمع اجتماعي كبير، أين تجد نفسك؟",
+                text: { ar: "في التجمعات، أين تجد نفسك؟", en: "In social gatherings, where are you?", fr: "Dans les réunions sociales, où êtes-vous ?" },
                 options: [
-                    { text: "في المركز، أقود الحديث وأضحك بصوت عالٍ", type: "F" },
-                    { text: "أجلس بهدوء أراقب المكان أو أتحدث بجدية", type: "E" },
-                    { text: "أتنقل بين المجموعات وأتعرف على الجميع", type: "A" },
-                    { text: "مع صديق واحد مقرب في زاوية هادئة", type: "W" }
+                    { type: "F", text: { ar: "في المركز، أقود الحديث", en: "Center stage, leading the talk", fr: "Au centre, menant la discussion" } },
+                    { type: "E", text: { ar: "أراقب المكان بهدوء", en: "Quietly observing", fr: "Observant calmement" } },
+                    { type: "A", text: { ar: "أتنقل وأتعرف على الجميع", en: "Mingling with everyone", fr: "Se mêlant à tout le monde" } },
+                    { type: "W", text: { ar: "مع صديق واحد مقرب", en: "With one close friend", fr: "Avec un ami proche" } }
                 ]
             },
             {
-                text: "ما هو الشيء الذي يحفزك أكثر في الحياة؟",
+                text: { ar: "ما الذي يحفزك أكثر؟", en: "What motivates you the most?", fr: "Qu'est-ce qui vous motive le plus ?" },
                 options: [
-                    { text: "التحدي، الشهرة، والفوز", type: "F" },
-                    { text: "المال، الاستقرار، والإنجاز الملموس", type: "E" },
-                    { text: "المعرفة، الأفكار الجديدة، والحرية", type: "A" },
-                    { text: "الحب، المشاعر العميقة، والروحانيات", type: "W" }
+                    { type: "F", text: { ar: "التحدي والفوز", en: "Challenge and winning", fr: "Le défi et la victoire" } },
+                    { type: "E", text: { ar: "المال والاستقرار", en: "Money and stability", fr: "L'argent et la stabilité" } },
+                    { type: "A", text: { ar: "المعرفة والأفكار", en: "Knowledge and ideas", fr: "La connaissance et les idées" } },
+                    { type: "W", text: { ar: "الحب والمشاعر", en: "Love and emotions", fr: "L'amour et les émotions" } }
                 ]
             },
             {
-                text: "كيف تتعامل مع المال؟",
+                text: { ar: "كيف تتعامل مع المال؟", en: "How do you handle money?", fr: "Comment gérez-vous l'argent ?" },
                 options: [
-                    { text: "أصرفه بسرعة للاستمتاع باللحظة", type: "F" },
-                    { text: "أديره بحكمة وأخطط للمستقبل بدقة", type: "E" },
-                    { text: "أصرفه على التجارب والسفر والكتب", type: "A" },
-                    { text: "أصرفه حسب حالتي المزاجية وكرمي مع من أحب", type: "W" }
+                    { type: "F", text: { ar: "أصرفه للاستمتاع", en: "Spend it for fun", fr: "Le dépenser pour le plaisir" } },
+                    { type: "E", text: { ar: "أديره وأخطط", en: "Manage and plan", fr: "Le gérer et planifier" } },
+                    { type: "A", text: { ar: "أصرفه على التجارب", en: "Spend on experiences", fr: "Le dépenser dans des expériences" } },
+                    { type: "W", text: { ar: "حسب مزاجي", en: "Depending on my mood", fr: "Selon mon humeur" } }
                 ]
             },
             {
-                text: "ما هو الصفة التي يكرهها الناس فيك أحياناً؟",
+                text: { ar: "صفة قد يكرهها الناس فيك؟", en: "A trait people might dislike in you?", fr: "Un trait que les gens pourraient détester ?" },
                 options: [
-                    { text: "التسرع والعصبية", type: "F" },
-                    { text: "العناد والبرود", type: "E" },
-                    { text: "التردد وتقلب المزاج", type: "A" },
-                    { text: "الحساسية المفرطة والغموض", type: "W" }
+                    { type: "F", text: { ar: "العصبية", en: "Impatience / Anger", fr: "L'impatience / Colère" } },
+                    { type: "E", text: { ar: "العناد", en: "Stubbornness", fr: "L'entêtement" } },
+                    { type: "A", text: { ar: "التردد", en: "Indecisiveness", fr: "L'indécision" } },
+                    { type: "W", text: { ar: "الحساسية المفرطة", en: "Oversensitivity", fr: "L'hypersensibilité" } }
+                ]
+            },
+            // ... (اختصرت الأسئلة للحفاظ على حجم الكود، لكن المنطق يعمل على الـ 15 سؤال إذا أضفت الباقي بنفس النسق)
+            // سأضيف بقية الـ 15 سؤال هنا بشكل سريع لتكون النسخة كاملة
+            {
+                text: { ar: "طريقة تفكيرك؟", en: "Your thinking style?", fr: "Votre style de pensée ?" },
+                options: [
+                    { type: "F", text: { ar: "حدسية وجريئة", en: "Intuitive and bold", fr: "Intuitive et audacieuse" } },
+                    { type: "E", text: { ar: "واقعية ومنظمة", en: "Realistic and organized", fr: "Réaliste et organisée" } },
+                    { type: "A", text: { ar: "تحليلية ومبتكرة", en: "Analytical and creative", fr: "Analytique et créative" } },
+                    { type: "W", text: { ar: "عاطفية وعميقة", en: "Emotional and deep", fr: "Émotionnelle et profonde" } }
                 ]
             },
             {
-                text: "كيف تصف طريقة تفكيرك؟",
+                text: { ar: "في الحب تبحث عن؟", en: "In love, you seek?", fr: "En amour, vous cherchez ?" },
                 options: [
-                    { text: "سريعة، حدسية، وجريئة", type: "F" },
-                    { text: "واقعية، عملية، ومنظمة", type: "E" },
-                    { text: "تحليلية، مبتكرة، ومتشعبة", type: "A" },
-                    { text: "خياية، عاطفية، وعميقة", type: "W" }
+                    { type: "F", text: { ar: "الشغف", en: "Passion", fr: "La passion" } },
+                    { type: "E", text: { ar: "الأمان", en: "Security", fr: "La sécurité" } },
+                    { type: "A", text: { ar: "التفاهم العقلي", en: "Intellectual connection", fr: "La connexion intellectuelle" } },
+                    { type: "W", text: { ar: "الاندماج الروحي", en: "Spiritual connection", fr: "La connexion spirituelle" } }
                 ]
             },
             {
-                text: "في الحب، أنت تبحث عن...",
+                text: { ar: "أسلوبك في القيادة؟", en: "Your leadership style?", fr: "Votre style de leadership ?" },
                 options: [
-                    { text: "شريك يشاركني المغامرة والشغف", type: "F" },
-                    { text: "شريك يوفر لي الأمان والاستقرار والوفاء", type: "E" },
-                    { text: "شريك ذكي يحاور عقلي ويفهمني", type: "A" },
-                    { text: "شريك يندمج مع روحي ويشعر بي دون كلام", type: "W" }
+                    { type: "F", text: { ar: "سيطرة وقوة", en: "Dominance and power", fr: "Dominance et pouvoir" } },
+                    { type: "E", text: { ar: "تنظيم وهيكلة", en: "Structure and order", fr: "Structure et ordre" } },
+                    { type: "A", text: { ar: "ديمقراطية ونقاش", en: "Democracy and debate", fr: "Démocratie et débat" } },
+                    { type: "W", text: { ar: "رعاية وإحساس", en: "Care and empathy", fr: "Soin et empathie" } }
                 ]
             },
             {
-                text: "لو كنت ملكاً، كيف ستحكم مملكتك؟",
+                text: { ar: "أنا...", en: "I am...", fr: "Je suis..." },
                 options: [
-                    { text: "بقوة وسيطرة وتوسعات عسكرية", type: "F" },
-                    { text: "بتنظيم الاقتصاد وبناء صروح تدوم", type: "E" },
-                    { text: "بالعدل والديمقراطية ونشر العلوم", type: "A" },
-                    { text: "بالرحمة ومساعدة الضعفاء والفنون", type: "W" }
+                    { type: "F", text: { ar: "الأقوى", en: "The Strongest", fr: "Le plus fort" } },
+                    { type: "E", text: { ar: "الأثبت", en: "The Most Stable", fr: "Le plus stable" } },
+                    { type: "A", text: { ar: "الأذكى", en: "The Smartest", fr: "Le plus intelligent" } },
+                    { type: "W", text: { ar: "الأعمق", en: "The Deepest", fr: "Le plus profond" } }
                 ]
             },
             {
-                text: "أي من هذه الكلمات تصف 'الأنا' الخاصة بك؟",
+                text: { ar: "أكبر مخاوفك؟", en: "Your biggest fear?", fr: "Votre plus grande peur ?" },
                 options: [
-                    { text: "أنا الأقوى", type: "F" },
-                    { text: "أنا الأثبت", type: "E" },
-                    { text: "أنا الأذكى", type: "A" },
-                    { text: "أنا الأعمق", type: "W" }
+                    { type: "F", text: { ar: "الضعف", en: "Weakness", fr: "La faiblesse" } },
+                    { type: "E", text: { ar: "الفقر/الفوضى", en: "Poverty/Chaos", fr: "La pauvreté/Le chaos" } },
+                    { type: "A", text: { ar: "القيود", en: "Restrictions", fr: "Les restrictions" } },
+                    { type: "W", text: { ar: "الخيانة", en: "Betrayal", fr: "La trahison" } }
                 ]
             },
             {
-                text: "ما هو أسوأ كابوس بالنسبة لك؟",
+                text: { ar: "الانتقام بالنسبة لك؟", en: "Revenge is...", fr: "La vengeance est..." },
                 options: [
-                    { text: "أن يتم تجاهلي أو أكون ضعيفاً", type: "F" },
-                    { text: "الفوضى وفقدان ممتلكاتي", type: "E" },
-                    { text: "الملل والقيود وفقدان الحرية", type: "A" },
-                    { text: "الخيانة وجرح المشاعر", type: "W" }
+                    { type: "F", text: { ar: "فوري", en: "Immediate", fr: "Immédiate" } },
+                    { type: "E", text: { ar: "نجاحي هو انتقامي", en: "Success is revenge", fr: "Le succès est ma vengeance" } },
+                    { type: "A", text: { ar: "بالكلام والذكاء", en: "Words and wit", fr: "Les mots et l'esprit" } },
+                    { type: "W", text: { ar: "التجاهل الأبدي", en: "Eternal ignorance", fr: "L'ignorance éternelle" } }
                 ]
             },
             {
-                text: "كيف تنتقم ممن ظلمك؟",
+                text: { ar: "لونك المفضل؟", en: "Favorite color tone?", fr: "Ton de couleur préféré ?" },
                 options: [
-                    { text: "مواجهة مباشرة وفورية", type: "F" },
-                    { text: "أتجاهله تماماً وأنجح بدونه (النجاح أفضل انتقام)", type: "E" },
-                    { text: "أستخدم ذكائي وكلماتي لأحرجه", type: "A" },
-                    { text: "أكتم الأمر ولكني لا أنسى أبداً وقد ألدغ لاحقاً", type: "W" }
+                    { type: "F", text: { ar: "أحمر/برتقالي", en: "Red/Orange", fr: "Rouge/Orange" } },
+                    { type: "E", text: { ar: "بني/أخضر", en: "Brown/Green", fr: "Marron/Vert" } },
+                    { type: "A", text: { ar: "أزرق/أصفر", en: "Blue/Yellow", fr: "Bleu/Jaune" } },
+                    { type: "W", text: { ar: "أسود/بنفسجي", en: "Black/Purple", fr: "Noir/Violet" } }
                 ]
             },
             {
-                text: "اختار لوناً ينجذب له بصرك:",
+                text: { ar: "نوع الأفلام؟", en: "Movie genre?", fr: "Genre de film ?" },
                 options: [
-                    { text: "الأحمر أو البرتقالي الناري", type: "F" },
-                    { text: "البني أو الأخضر الداكن", type: "E" },
-                    { text: "الأزرق السماوي أو الأصفر", type: "A" },
-                    { text: "النيلي أو البنفسجي أو الأسود", type: "W" }
+                    { type: "F", text: { ar: "أكشن", en: "Action", fr: "Action" } },
+                    { type: "E", text: { ar: "واقعي/وثائقي", en: "Realistic/Docu", fr: "Réaliste/Docu" } },
+                    { type: "A", text: { ar: "خيال علمي", en: "Sci-Fi", fr: "Science-fiction" } },
+                    { type: "W", text: { ar: "دراما", en: "Drama", fr: "Drame" } }
                 ]
             },
             {
-                text: "ما هو نوع الأفلام الذي تفضله؟",
+                text: { ar: "القوانين؟", en: "Rules?", fr: "Les règles ?" },
                 options: [
-                    { text: "الأكشن والمغامرات", type: "F" },
-                    { text: "الوثائقية أو القصص الواقعية", type: "E" },
-                    { text: "الخيال العلمي والغموض", type: "A" },
-                    { text: "الدراما والرومانسية النفسية", type: "W" }
+                    { type: "F", text: { ar: "تُكسر", en: "Are meant to be broken", fr: "Sont faites pour être brisées" } },
+                    { type: "E", text: { ar: "ضرورية", en: "Are necessary", fr: "Sont nécessaires" } },
+                    { type: "A", text: { ar: "للنقاش", en: "Open for debate", fr: "Ouvertes au débat" } },
+                    { type: "W", text: { ar: "أتبع إحساسي", en: "I follow my gut", fr: "Je suis mon instinct" } }
                 ]
             },
             {
-                text: "كيف تتعامل مع القواعد والقوانين؟",
+                text: { ar: "هل تؤمن بالأبراج؟", en: "Do you believe in Zodiacs?", fr: "Croyez-vous aux signes ?" },
                 options: [
-                    { text: "القواعد وضعت لكي تُكسر", type: "F" },
-                    { text: "أحترمها لأنها تحافظ على النظام", type: "E" },
-                    { text: "أناقشها وأحاول تغيير ما لا يعجبني", type: "A" },
-                    { text: "أتبع ما يمليه علي ضميري وإحساسي فقط", type: "W" }
-                ]
-            },
-            {
-                text: "سؤال أخير: هل تؤمن بالأبراج؟",
-                options: [
-                    { text: "نعم، لأنني أشعر بصفاتي فيها", type: "F" },
-                    { text: "أشك، أحتاج لإثبات ملموس", type: "E" },
-                    { text: "موضوع مثير للجدل والنقاش", type: "A" },
-                    { text: "نعم، هناك رابط روحي بيننا وبين الكون", type: "W" }
+                    { type: "F", text: { ar: "نعم", en: "Yes", fr: "Oui" } },
+                    { type: "E", text: { ar: "أحتاج إثبات", en: "Need proof", fr: "Besoin de preuves" } },
+                    { type: "A", text: { ar: "موضوع للنقاش", en: "Topic for debate", fr: "Sujet à débat" } },
+                    { type: "W", text: { ar: "روحانياً نعم", en: "Spiritually yes", fr: "Spirituellement oui" } }
                 ]
             }
         ];
 
+        /* --- المنطق البرمجي --- */
+        
         let currentQuestion = 0;
         let scores = { F: 0, E: 0, A: 0, W: 0 };
 
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // تحديث الاتجاه والنصوص
+            if (lang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            document.getElementById('subtitle').innerText = uiText[lang].subtitle;
+            document.getElementById('result-title').innerText = uiText[lang].resultTitle;
+            document.getElementById('restart-btn').innerText = uiText[lang].restart;
+
+            // الانتقال للشاشة التالية
+            document.getElementById('lang-screen').classList.add('hidden');
+            document.getElementById('main-header').classList.add('hidden'); // إخفاء الهيدر للتركيز
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
         function loadQuestion() {
-            const q = questions[currentQuestion];
-            document.getElementById("question-text").innerText = q.text;
+            const q = questionsData[currentQuestion];
+            document.getElementById("question-text").innerText = q.text[currentLang];
             
             const optionsDiv = document.getElementById("options-container");
-            optionsDiv.innerHTML = ""; // مسح الأزرار القديمة
+            optionsDiv.innerHTML = "";
 
-            // خلط الإجابات عشوائياً حتى لا يكون الترتيب ثابتاً
-            let shuffledOptions = q.options.sort(() => Math.random() - 0.5);
+            // خلط عشوائي
+            let shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
 
             shuffledOptions.forEach(opt => {
                 const btn = document.createElement("button");
-                btn.innerText = opt.text;
+                btn.className = "option-btn";
+                btn.innerText = opt.text[currentLang];
                 btn.onclick = () => handleAnswer(opt.type);
                 optionsDiv.appendChild(btn);
             });
 
-            // تحديث شريط التقدم
-            let progress = ((currentQuestion) / questions.length) * 100;
+            let progress = ((currentQuestion) / questionsData.length) * 100;
             document.getElementById("progress").style.width = progress + "%";
         }
 
@@ -349,7 +431,7 @@
             scores[type]++;
             currentQuestion++;
 
-            if (currentQuestion < questions.length) {
+            if (currentQuestion < questionsData.length) {
                 loadQuestion();
             } else {
                 showResult();
@@ -357,13 +439,11 @@
         }
 
         function showResult() {
-            document.getElementById("quiz-screen").style.display = "none";
-            document.getElementById("result-screen").style.display = "block";
-            document.querySelector("header").style.display = "none"; // إخفاء الهيدر للتركيز
+            document.getElementById("quiz-screen").classList.add('hidden');
+            document.getElementById("result-screen").classList.remove('hidden');
 
-            // تحديد العنصر الفائز
             let maxScore = 0;
-            let element = "";
+            let element = "F"; // Default
             for (let type in scores) {
                 if (scores[type] > maxScore) {
                     maxScore = scores[type];
@@ -372,41 +452,16 @@
             }
 
             let resultTitle = "";
-            let resultDesc = "";
+            const signs = {
+                F: { ar: "ناري (حمل/أسد/قوس)", en: "Fire (Aries/Leo/Sagittarius)", fr: "Feu (Bélier/Lion/Sagittaire)" },
+                E: { ar: "ترابي (ثور/عذراء/جدي)", en: "Earth (Taurus/Virgo/Capricorn)", fr: "Terre (Taureau/Vierge/Capricorne)" },
+                A: { ar: "هوائي (جوزاء/ميزان/دلو)", en: "Air (Gemini/Libra/Aquarius)", fr: "Air (Gémeaux/Balance/Verseau)" },
+                W: { ar: "مائي (سرطان/عقرب/حوت)", en: "Water (Cancer/Scorpio/Pisces)", fr: "Eau (Cancer/Scorpion/Poissons)" }
+            };
 
-            // تحليل النتيجة وتوقع البرج
-            if (element === "F") {
-                // ناري
-                const signs = ["الحمل (Aries)", "الأسد (Leo)", "القوس (Sagittarius)"];
-                const randomSign = signs[Math.floor(Math.random() * signs.length)];
-                resultTitle = randomSign;
-                resultDesc = "شخصيتك نارية بامتياز! أنت تملك طاقة هائلة، قيادي بالفطرة، وجريء. يغلب عليك الشغف والتسرع أحياناً، لكن قلبك طيب ومخلص. تتوافق إجاباتك بشدة مع صفات الأبراج النارية.";
-            } else if (element === "E") {
-                // ترابي
-                const signs = ["الثور (Taurus)", "العذراء (Virgo)", "الجدي (Capricorn)"];
-                const randomSign = signs[Math.floor(Math.random() * signs.length)];
-                resultTitle = randomSign;
-                resultDesc = "شخصيتك ترابية. أنت إنسان واقعي، عملي، وتبحث عن الاستقرار. لا تنجرف وراء الأوهام وتعرف قيمة المال والعمل الجاد. أنت صخرة يعتمد عليها الآخرون. تتوافق إجاباتك مع الأبراج الترابية.";
-            } else if (element === "A") {
-                // هوائي
-                const signs = ["الجوزاء (Gemini)", "الميزان (Libra)", "الدلو (Aquarius)"];
-                const randomSign = signs[Math.floor(Math.random() * signs.length)];
-                resultTitle = randomSign;
-                resultDesc = "شخصيتك هوائية. أنت مفكر، اجتماعي، وتحب الحرية فوق كل شيء. تكره الروتين ولديك قدرة رائعة على التواصل وتحليل الأمور بذكاء. تتوافق إجاباتك مع الأبراج الهوائية.";
-            } else {
-                // مائي (أو تعادل) - Default to Water if undefined
-                const signs = ["السرطان (Cancer)", "العقرب (Scorpio)", "الحوت (Pisces)"];
-                const randomSign = signs[Math.floor(Math.random() * signs.length)];
-                resultTitle = randomSign;
-                resultDesc = "شخصيتك مائية. أنت عميق جداً، عاطفي، وتملك حدساً قوياً يكاد يقرأ الأفكار. ظاهرك هادئ لكن داخلك محيط من المشاعر والأسرار. تتوافق إجاباتك بشدة مع الأبراج المائية.";
-            }
-
-            document.getElementById("zodiac-result").innerText = resultTitle;
-            document.getElementById("analysis-text").innerText = resultDesc;
+            document.getElementById("zodiac-result").innerText = signs[element][currentLang];
+            document.getElementById("analysis-text").innerText = analysisText[element][currentLang];
         }
-
-        // بدء التطبيق
-        loadQuestion();
 
     </script>
 </body>
