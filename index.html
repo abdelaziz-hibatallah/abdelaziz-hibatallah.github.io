@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ego | الغرفة الخاصة</title>
+    <title>The Ego | Private Room</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
-        /* تصميم "The Ego" المظلم */
+        /* Design sombre "The Ego" */
         body {
             background-color: #000;
             color: #eee;
@@ -67,7 +67,7 @@
         }
         button:hover { background: #ccc; }
 
-        /* واجهة الدردشة */
+        /* Interface de Chat */
         #chat-interface { 
             display: none; 
             height: 85vh; 
@@ -79,6 +79,7 @@
             border-bottom: 1px solid #222;
             padding-bottom: 10px;
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
         #messages {
             flex-grow: 1;
@@ -86,15 +87,15 @@
             border: 1px solid #222;
             padding: 15px;
             margin-bottom: 15px;
-            text-align: right;
+            text-align: left; /* Alignement à gauche pour le français */
             background: #050505;
         }
-        /* شكل الرسالة */
+        /* Style des messages */
         .msg { margin: 8px 0; padding: 5px; border-bottom: 1px solid #1a1a1a; }
-        .sender { color: #888; font-size: 0.7em; display: block; margin-bottom: 4px; }
+        .sender { color: #888; font-size: 0.7em; display: block; margin-bottom: 4px; font-weight: bold;}
         .text { font-size: 1em; color: #ddd; }
         
-        /* شريط التمرير */
+        /* Scrollbar personnalisé */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #333; }
     </style>
@@ -103,33 +104,33 @@
 
     <div id="login-interface" class="container">
         <h1>THE EGO</h1>
-        <p style="color:#444; font-size:0.8em;">IDENTITY & PIN CODE</p>
+        <p style="color:#444; font-size:0.8em;">IDENTITÉ & CODE D'ACCÈS</p>
         
-        <input type="text" id="username" placeholder="الاسم (Identity)">
-        <input type="password" id="pincode" maxlength="4" placeholder="الكود (4 أرقام)">
+        <input type="text" id="username" placeholder="Votre Nom (Identité)">
+        <input type="password" id="pincode" maxlength="4" placeholder="Code PIN (4 chiffres)">
         
         <br>
-        <button onclick="enterRoom()">DÉGAGE (دخول)</button>
+        <button onclick="enterRoom()">DÉGAGE (ENTRER)</button>
     </div>
 
     <div id="chat-interface" class="container">
-        <div id="room-info">غرفة سرية رقم: <span id="room-id-display"></span></div>
+        <div id="room-info">ROOM : <span id="room-id-display"></span></div>
         
         <div id="messages">
             </div>
         
-        <input type="text" id="msg-input" placeholder="اكتب رسالتك..." onkeypress="handleEnter(event)">
-        <button onclick="sendMessage()">إرسال</button>
-        <button onclick="location.reload()" style="background:transparent; color:#444; font-size:0.8em; margin-top:5px; border:1px solid #222;">خروج</button>
+        <input type="text" id="msg-input" placeholder="Votre message..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">ENVOYER</button>
+        <button onclick="location.reload()" style="background:transparent; color:#444; font-size:0.8em; margin-top:5px; border:1px solid #222;">QUITTER</button>
     </div>
 
     <script>
-        // --- إعدادات Firebase الخاصة بمشروعك ---
+        // --- Configuration Firebase ---
         const firebaseConfig = {
             apiKey: "AIzaSyBwRtHgM5cBTxci9ffzMOPp9POTTy-PbWE",
             authDomain: "theegochat.firebaseapp.com",
-            // ملاحظة: أضفت هذا الرابط لأنه ضروري، وهو يعتمد على اسم مشروعك
-            databaseURL: "https://theegochat-default-rtdb.firebaseio.com",
+            // IMPORTANT : Si les messages ne partent pas, vérifiez ce lien dans la console Firebase
+            databaseURL: "https://theegochat-default-rtdb.firebaseio.com", 
             projectId: "theegochat",
             storageBucket: "theegochat.firebasestorage.app",
             messagingSenderId: "256766104582",
@@ -137,17 +138,16 @@
             measurementId: "G-BXH9KEHN76"
         };
 
-        // --- تهيئة التطبيق ---
+        // --- Initialisation ---
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
 
-        // متغيرات
         let currentRoom = "";
         let currentUser = "";
 
-        // دالة الدخول
+        // Fonction pour entrer
         function enterRoom() {
             const name = document.getElementById('username').value.trim();
             const pin = document.getElementById('pincode').value.trim();
@@ -156,19 +156,17 @@
                 currentUser = name;
                 currentRoom = pin;
                 
-                // تبديل الواجهة
                 document.getElementById('login-interface').style.display = 'none';
                 document.getElementById('chat-interface').style.display = 'flex';
                 document.getElementById('room-id-display').innerText = pin;
 
-                // تحميل الرسائل
                 loadMessages();
             } else {
-                alert("يرجى كتابة الاسم وكود من 4 أرقام");
+                alert("Veuillez entrer un nom et un code à 4 chiffres.");
             }
         }
 
-        // دالة إرسال الرسالة
+        // Fonction pour envoyer
         function sendMessage() {
             const msgInput = document.getElementById('msg-input');
             const msg = msgInput.value.trim();
@@ -179,24 +177,21 @@
                     text: msg,
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
-                msgInput.value = ""; // إفراغ الحقل
+                msgInput.value = ""; 
             }
         }
 
-        // الإرسال عند ضغط Enter
         function handleEnter(e) {
             if(e.key === 'Enter') sendMessage();
         }
 
-        // دالة تحميل الرسائل وعرضها
+        // Chargement des messages
         function loadMessages() {
             const messagesDiv = document.getElementById('messages');
             
-            // الاستماع للرسائل الجديدة في هذه الغرفة فقط
             db.ref('rooms/' + currentRoom).limitToLast(50).on('child_added', function(snapshot) {
                 const data = snapshot.val();
                 
-                // إنشاء عنصر الرسالة
                 const msgElement = document.createElement('div');
                 msgElement.classList.add('msg');
                 msgElement.innerHTML = `
@@ -205,7 +200,6 @@
                 `;
                 
                 messagesDiv.appendChild(msgElement);
-                // النزول لأسفل تلقائياً لرؤية آخر رسالة
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
         }
