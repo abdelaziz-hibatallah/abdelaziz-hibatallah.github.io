@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The EGO</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>The EGO</h1>
+        <div class="subtitle">السلطة، التاريخ، والذات المطلقة</div>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>المقدمة</h2>
+            <p>
+                هنا يمكنك كتابة مقدمة عن فلسفة "الأنا". هذا التصميم الكلاسيكي يعكس الجدية والغموض.
+                يمكنك التحدث هنا عن التأثير النفسي للسلطة عبر العصور.
+            </p>
+        </section>
+
+        <div class="quote">
+            "العظمة هي صدى الروح التي ترفض الخضوع للقدر."
+        </div>
+
+        <section>
+            <h2>فلسفة القوة</h2>
+            <p>
+                استخدم هذه المساحة لكتابة تحليلاتك التاريخية أو الفلسفية. الخلفية الداكنة والخط الذهبي يجعلان القراءة مريحة وتعطي طابعاً فخماً للمحتوى.
+            </p>
+            <p>
+                النص هنا مبرمج ليكون "Justified" (متساوي من الجهتين) ليشبه الكتب القديمة.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2026 The EGO Project. Design by GitHub Student.
+    </footer>
+
+</body>
+</html>
