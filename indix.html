@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The EGO - Interactive</title>
+    <style>
+        /* --- CSS (التصميم) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+        :root {
+            --bg-color: #0a0a0a;
+            --card-color: #141414;
+            --gold: #d4af37;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Amiri', serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: 4rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            background-color: var(--card-color);
+            border: 1px solid #333;
+            border-top: 4px solid var(--gold);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border-radius: 5px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            min-height: 60px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            background-color: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 15px;
+            font-size: 1.2rem;
+            font-family: 'Amiri', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--gold);
+            color: #000;
+            transform: scale(1.02);
+        }
+
+        .hidden { display: none; }
+        
+        #result {
+            font-size: 1.8rem;
+            color: var(--gold);
+            animation: fadeIn 2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The EGO</h1>
+
+    <div class="container" id="quiz-box">
+        <div class="question" id="question-text">هل تفضل السيطرة أم الحرية؟</div>
+        
+        <div class="options">
+            <button onclick="nextQuestion(1)">السيطرة المطلقة</button>
+            <button onclick="nextQuestion(2)">الحرية الفردية</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="result-box">
+        <div id="result"></div>
+        <br>
+        <button onclick="location.reload()">إعادة الاختبار</button>
+    </div>
+
+    <script>
+        /* --- JavaScript (التفاعل) --- */
+        
+        // قائمة الأسئلة (يمكنك تغيير النصوص هنا)
+        const questions = [
+            {
+                text: "في مواجهة الفوضى، ماذا يختار الـ 'أنا' الخاص بك؟",
+                optionA: "فرض النظام بالقوة",
+                optionB: "التكيف مع الفوضى"
+            },
+            {
+                text: "هل التاريخ يصنعه الأفراد أم الجماعات؟",
+                optionA: "فرد واحد قوي",
+                optionB: "إرادة الجماعة"
+            },
+            {
+                text: "ما هي غايتك النهائية؟",
+                optionA: "الخلود في الذاكرة",
+                optionB: "السلام الداخلي"
+            }
+        ];
+
+        let currentStep = 0;
+        let egoScore = 0; // مقياس بسيط لتحليل الشخصية
+
+        function nextQuestion(choice) {
+            // 1 تعني الخيار الأول (أكثر سلطة)، 2 تعني الخيار الثاني
+            if(choice === 1) egoScore++;
+            
+            // ننتقل للسؤال التالي
+            if (currentStep < questions.length) {
+                document.getElementById('question-text').innerText = questions[currentStep].text;
+                // تحديث نصوص الأزرار
+                const buttons = document.querySelectorAll('.options button');
+                buttons[0].innerText = questions[currentStep].optionA;
+                buttons[0].setAttribute('onclick', 'nextQuestion(1)');
+                
+                buttons[1].innerText = questions[currentStep].optionB;
+                buttons[1].setAttribute('onclick', 'nextQuestion(2)');
+                
+                currentStep++;
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            // إخفاء صندوق الأسئلة وإظهار النتيجة
+            document.getElementById('quiz-box').classList.add('hidden');
+            document.getElementById('result-box').classList.remove('hidden');
+            
+            const resultText = document.getElementById('result');
+            
+            if (egoScore >= 2) {
+                resultText.innerText = "تحليلك: 'الأنا الحاكم'. أنت تميل للسلطة والنظام وترى العالم كمسرح لإرادتك.";
+            } else {
+                resultText.innerText = "تحليلك: 'الأنا الحر'. أنت تقدس الاستقلالية وترى القوة في المرونة لا في الجمود.";
+            }
+        }
+    </script>
+
+</body>
+</html>
