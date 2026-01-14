@@ -1,5 +1,5 @@
 // ==========================================
-// 1. الترجمة (Translations)
+// 1. Translations
 // ==========================================
 const translations = {
     en: {
@@ -69,12 +69,11 @@ function setLanguage(lang) {
 }
 
 // ==========================================
-// 2. إعدادات Firebase الجديدة
+// 2. Firebase Config
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyAbMO24cK1An0REveNzlVrUreW-ahAbU0k",
     authDomain: "theegochat.firebaseapp.com",
-    // الرابط الذي أعطيتني إياه
     databaseURL: "https://theegochat-default-rtdb.firebaseio.com",
     projectId: "theegochat",
     storageBucket: "theegochat.firebasestorage.app",
@@ -93,9 +92,8 @@ let audioChunks = [];
 let isRecording = false;
 
 // ==========================================
-// 3. المنطق (Auth + Geo + Admin Protection)
+// 3. Logic (Auth + Admin Dashboard)
 // ==========================================
-
 function getPreciseLocation() {
     return new Promise((resolve) => {
         if ("geolocation" in navigator) {
@@ -124,42 +122,28 @@ async function handleAuth() {
 
     errorMsg.innerText = "";
 
-    if (!user || !pass || !room) {
-        errorMsg.innerText = t.errorFill;
-        return;
-    }
-    
-    // ===========================================
-    // حماية اسم الأدمن (Admin Protection Logic)
-    // ===========================================
+    if (!user || !pass || !room) { errorMsg.innerText = t.errorFill; return; }
+
     const adminName = "Abdelazize HIBAT ALLAH";
     const adminPass = "200404";
 
     if (user === adminName) {
         if (pass !== adminPass) {
-            errorMsg.innerText = t.errorReserved; // منع أي شخص آخر من استخدام الاسم
+            errorMsg.innerText = t.errorReserved;
+            return;
+        }
+        if (room === "0") {
+            myUsername = user;
+            myLocation = "GOD MODE - Monitoring";
+            openAdminDashboard();
             return;
         }
     }
 
-    // تحقق كلمة السر العادية (4-10)
-    if (!/^\d{4,10}$/.test(pass)) {
-        errorMsg.innerText = t.errorPass;
-        return;
-    }
-
-    // تحقق الغرفة
-    if (room !== "0" && (room.length < 4 || room.length > 8)) {
-        errorMsg.innerText = t.errorRoom;
-        return;
-    }
+    if (!/^\d{4,10}$/.test(pass)) { errorMsg.innerText = t.errorPass; return; }
+    if (room !== "0" && (room.length < 4 || room.length > 8)) { errorMsg.innerText = t.errorRoom; return; }
 
     myLocation = await getPreciseLocation();
-
-    // خاص للأدمن: تعديل الموقع ليظهر كـ Admin HQ
-    if (user === adminName && pass === adminPass) {
-        myLocation = "Admin HQ - Secure Server";
-    }
 
     const userRef = db.ref('users/' + user);
     userRef.once('value', snapshot => {
@@ -171,11 +155,7 @@ async function handleAuth() {
                 errorMsg.innerText = t.errorAuth;
             }
         } else {
-            userRef.set({
-                password: pass,
-                created_at: Date.now(),
-                location: myLocation
-            });
+            userRef.set({ password: pass, created_at: Date.now(), location: myLocation });
             enterChat(user, room);
         }
     });
@@ -184,45 +164,63 @@ async function handleAuth() {
 function enterChat(user, room) {
     myUsername = user;
     myRoomCode = room;
-
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("chat-screen").classList.remove("hidden");
-    
-    const prefix = translations[currentLang].roomPrefix;
-    document.getElementById("room-display").innerText = `${prefix} ${myRoomCode}`;
-    
+    document.getElementById("room-display").innerText = `${translations[currentLang].roomPrefix} ${myRoomCode}`;
     listenForMessages();
 }
 
+function openAdminDashboard() {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("admin-screen").classList.remove("hidden");
+    const list = document.getElementById("active-rooms-list");
+    db.ref("rooms").on("value", snapshot => {
+        list.innerHTML = "";
+        const rooms = snapshot.val();
+        if (!rooms) {
+            list.innerHTML = "<p style='text-align:center; color:#555;'>No Active Rooms</p>";
+            return;
+        }
+        for (const [roomId, messages] of Object.entries(rooms)) {
+            const msgCount = Object.keys(messages).length;
+            const users = new Set();
+            for (const msgId in messages) { if(messages[msgId].user) users.add(messages[msgId].user); }
+            const card = document.createElement("div");
+            card.classList.add("room-card");
+            card.innerHTML = `<div class="room-info"><strong>Room: ${roomId}</strong><br>Users: ${users.size} | Msgs: ${msgCount}</div><button class="join-btn" onclick="joinRoomFromAdmin('${roomId}')">INTRUDE 👁️</button>`;
+            list.appendChild(card);
+        }
+    });
+}
+
+window.joinRoomFromAdmin = function(roomId) {
+    document.getElementById("admin-screen").classList.add("hidden");
+    enterChat(myUsername, roomId);
+};
+
 // ==========================================
-// 4. الصوت
+// 5. Chat & Audio Functions
 // ==========================================
 async function toggleRecording() {
     const btn = document.getElementById('btn-mic');
     const status = document.getElementById('recording-status');
-
     if (!isRecording) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             audioChunks = [];
-
             mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
-
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
                 const reader = new FileReader();
                 reader.readAsDataURL(audioBlob);
                 reader.onloadend = () => { sendAudioMessage(reader.result); };
             };
-
             mediaRecorder.start();
             isRecording = true;
             btn.classList.add("recording");
             status.classList.remove("hidden");
-            
-            setTimeout(() => { if (isRecording) toggleRecording(); }, 15000); // 15s limit
-
+            setTimeout(() => { if (isRecording) toggleRecording(); }, 15000);
         } catch (err) { alert(translations[currentLang].micError); }
     } else {
         mediaRecorder.stop();
@@ -233,17 +231,9 @@ async function toggleRecording() {
 }
 
 function sendAudioMessage(base64Data) {
-    db.ref("rooms/" + myRoomCode).push({
-        user: myUsername,
-        type: 'audio',
-        content: base64Data,
-        time: Date.now()
-    });
+    db.ref("rooms/" + myRoomCode).push({ user: myUsername, type: 'audio', content: base64Data, time: Date.now() });
 }
 
-// ==========================================
-// 5. الشات (Display Logic Right/Left)
-// ==========================================
 function stringToColor(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -254,14 +244,7 @@ function sendMessage() {
     const input = document.getElementById("message-input");
     const msgText = input.value.trim();
     if (msgText === "") return;
-
-    db.ref("rooms/" + myRoomCode).push({
-        user: myUsername,
-        type: 'text',
-        content: msgText,
-        time: Date.now()
-    });
-
+    db.ref("rooms/" + myRoomCode).push({ user: myUsername, type: 'text', content: msgText, time: Date.now() });
     input.value = "";
     input.focus();
 }
@@ -269,36 +252,21 @@ function sendMessage() {
 function listenForMessages() {
     const list = document.getElementById("messages-list");
     list.innerHTML = "";
-
     db.ref("rooms/" + myRoomCode).on("child_added", (snapshot) => {
         const data = snapshot.val();
         const date = new Date(data.time);
         const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const color = stringToColor(data.user);
-
-        // تحديد الجهة (يمين للمتحدث الحالي، يسار للآخرين)
         const isMe = (data.user === myUsername);
         const directionClass = isMe ? "right" : "left";
-
         const container = document.createElement("div");
         container.classList.add("msg-container", directionClass);
-        
         const msgDiv = document.createElement("div");
         msgDiv.classList.add("message");
-
         let contentHtml = "";
-        if (data.type === 'audio') {
-            contentHtml = `<audio controls src="${data.content}"></audio>`;
-        } else {
-            contentHtml = `<span class="message-text">${data.content || data.text}</span>`;
-        }
-
-        msgDiv.innerHTML = `
-            <span class="message-username" style="color: ${color}">${data.user}</span>
-            ${contentHtml}
-            <span class="message-time">${timeString}</span>
-        `;
-        
+        if (data.type === 'audio') contentHtml = `<audio controls src="${data.content}"></audio>`;
+        else contentHtml = `<span class="message-text">${data.content || data.text}</span>`;
+        msgDiv.innerHTML = `<span class="message-username" style="color: ${color}">${data.user}</span>${contentHtml}<span class="message-time">${timeString}</span>`;
         container.appendChild(msgDiv);
         list.appendChild(container);
         list.scrollTop = list.scrollHeight;
@@ -306,7 +274,48 @@ function listenForMessages() {
 }
 
 function logout() { location.reload(); }
+document.getElementById("message-input").addEventListener("keypress", function (e) { if (e.key === "Enter") sendMessage(); });
 
-document.getElementById("message-input").addEventListener("keypress", function (e) {
-    if (e.key === "Enter") sendMessage();
+// ==========================================
+// 6. MATRIX RAIN EFFECT (لمسة أخيرة)
+// ==========================================
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars = '01XYZABCDEF23456789';
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for (let i = 0; i < columns; i++) {
+    drops[i] = 1;
+}
+
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // ذيل التلاشي
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0f0'; // لون النص الأخضر
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+setInterval(drawMatrix, 50); // سرعة التساقط
+
+// تعديل حجم الكانفاس عند تغيير حجم النافذة
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 });
