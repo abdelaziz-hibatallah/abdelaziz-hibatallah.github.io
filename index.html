@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ego | Private Room</title>
+    <title>The Ego | Project</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
-        /* Design sombre "The Ego" */
         body {
             background-color: #000;
-            color: #eee;
+            color: #ccc;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             justify-content: center;
@@ -22,185 +21,277 @@
             overflow: hidden;
         }
         .container {
-            text-align: center;
             width: 90%;
-            max-width: 400px;
-            background: #0a0a0a;
-            padding: 25px;
+            max-width: 450px;
+            background: #0d0d0d;
+            padding: 20px;
             border: 1px solid #333;
-            border-radius: 4px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            text-align: center;
         }
-        h1 { 
-            letter-spacing: 4px; 
-            font-size: 26px; 
-            margin-bottom: 30px; 
-            text-transform: uppercase;
-        }
+        h1 { margin-bottom: 20px; letter-spacing: 3px; color: #fff; }
+        
         input {
-            background: #111;
-            border: 1px solid #333;
+            background: #1a1a1a;
+            border: 1px solid #444;
             color: #fff;
             padding: 12px;
-            margin: 10px 0;
-            width: 85%;
+            margin: 8px 0;
+            width: 80%;
             text-align: center;
-            font-size: 16px;
-            border-radius: 2px;
+            border-radius: 3px;
             outline: none;
-            transition: 0.3s;
         }
-        input:focus { border-color: #777; }
         
         button {
             background: #fff;
             color: #000;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 25px;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 15px;
+            width: 90%;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            width: 100%;
         }
-        button:hover { background: #ccc; }
+        button:disabled { background: #555; cursor: not-allowed; }
 
-        /* Interface de Chat */
-        #chat-interface { 
-            display: none; 
-            height: 85vh; 
-            flex-direction: column; 
-        }
-        #room-info {
-            color: #555;
-            font-size: 0.9em;
-            border-bottom: 1px solid #222;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+        /* واجهة الشات */
+        #chat-interface { display: none; height: 90vh; flex-direction: column; }
         #messages {
             flex-grow: 1;
             overflow-y: auto;
             border: 1px solid #222;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: left; /* Alignement à gauche pour le français */
+            padding: 10px;
+            margin: 10px 0;
+            text-align: left;
             background: #050505;
         }
-        /* Style des messages */
-        .msg { margin: 8px 0; padding: 5px; border-bottom: 1px solid #1a1a1a; }
-        .sender { color: #888; font-size: 0.7em; display: block; margin-bottom: 4px; font-weight: bold;}
-        .text { font-size: 1em; color: #ddd; }
+        .msg { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #1f1f1f; }
+        .meta { font-size: 0.75em; color: #666; margin-bottom: 3px; display: flex; justify-content: space-between;}
+        .text { font-size: 1em; color: #eee; }
         
-        /* Scrollbar personnalisé */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #333; }
+        /* زر التسجيل */
+        #record-btn {
+            background: #c00;
+            color: #fff;
+            margin-top: 5px;
+            width: 100%;
+        }
+        #record-btn.recording { background: #fff; color: #c00; animation: pulse 1s infinite; }
+        
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        audio { width: 100%; height: 30px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="login-interface" class="container">
-        <h1>THE EGO</h1>
-        <p style="color:#444; font-size:0.8em;">IDENTITÉ & CODE D'ACCÈS</p>
+    <div id="auth-interface" class="container">
+        <h1>THE EGO <span style="font-size:0.5em; display:block; color:#555">IDENTITY PROTOCOL</span></h1>
         
-        <input type="text" id="username" placeholder="Votre Nom (Identité)">
-        <input type="password" id="pincode" maxlength="4" placeholder="Code PIN (4 chiffres)">
+        <p id="status-msg" style="color:#d9534f; font-size:0.8em;"></p>
+
+        <input type="text" id="username" placeholder="Pseudo (Nom Utilisateur)">
+        <input type="password" id="user-pass" maxlength="5" placeholder="Mot de passe (3-5 chiffres)">
         
-        <br>
-        <button onclick="enterRoom()">DÉGAGE (ENTRER)</button>
+        <hr style="border-color:#222; width:50%; margin: 15px auto;">
+
+        <input type="number" id="room-code" placeholder="Code Chambre (4-9 chiffres)">
+        
+        <button onclick="handleLoginAndJoin()">CONNEXION / CRÉATION</button>
     </div>
 
     <div id="chat-interface" class="container">
-        <div id="room-info">ROOM : <span id="room-id-display"></span></div>
+        <div style="font-size:0.8em; color:#888;">ROOM: <span id="room-display" style="color:#fff"></span></div>
         
-        <div id="messages">
-            </div>
+        <div id="messages"></div>
         
-        <input type="text" id="msg-input" placeholder="Votre message..." onkeypress="handleEnter(event)">
-        <button onclick="sendMessage()">ENVOYER</button>
-        <button onclick="location.reload()" style="background:transparent; color:#444; font-size:0.8em; margin-top:5px; border:1px solid #222;">QUITTER</button>
+        <input type="text" id="msg-input" placeholder="Message..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">ENVOYER (TEXTE)</button>
+        
+        <button id="record-btn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">
+            MAINTENIR POUR PARLER (AUDIO)
+        </button>
+
+        <button onclick="location.reload()" style="background:transparent; color:#555; border:1px solid #333; margin-top:10px;">QUITTER</button>
     </div>
 
     <script>
-        // --- Configuration Firebase ---
+        // --- 1. إعدادات Firebase ---
         const firebaseConfig = {
             apiKey: "AIzaSyBwRtHgM5cBTxci9ffzMOPp9POTTy-PbWE",
             authDomain: "theegochat.firebaseapp.com",
-            // IMPORTANT : Si les messages ne partent pas, vérifiez ce lien dans la console Firebase
-            databaseURL: "https://theegochat-default-rtdb.firebaseio.com", 
+            databaseURL: "https://theegochat-default-rtdb.firebaseio.com", // تأكد أن هذا الرابط صحيح من الخطوة السابقة
             projectId: "theegochat",
             storageBucket: "theegochat.firebasestorage.app",
             messagingSenderId: "256766104582",
-            appId: "1:256766104582:web:90ce5a80e009d108529f87",
-            measurementId: "G-BXH9KEHN76"
+            appId: "1:256766104582:web:90ce5a80e009d108529f87"
         };
 
-        // --- Initialisation ---
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let currentRoom = "";
-        let currentUser = "";
+        // --- متغيرات النظام ---
+        let currentUser = null;
+        let currentRoom = null;
+        let userIP = "Unknown";
+        
+        // إعدادات الصوت
+        let mediaRecorder;
+        let audioChunks = [];
 
-        // Fonction pour entrer
-        function enterRoom() {
+        // --- 2. جلب IP الزائر فور فتح الموقع ---
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => { userIP = data.ip; console.log("Visitor IP:", userIP); })
+            .catch(err => console.error("IP Error", err));
+
+        // --- 3. نظام الدخول الذكي ---
+        function handleLoginAndJoin() {
             const name = document.getElementById('username').value.trim();
-            const pin = document.getElementById('pincode').value.trim();
+            const pass = document.getElementById('user-pass').value.trim();
+            const room = document.getElementById('room-code').value.trim();
+            const status = document.getElementById('status-msg');
 
-            if (name && pin.length === 4) {
-                currentUser = name;
-                currentRoom = pin;
-                
-                document.getElementById('login-interface').style.display = 'none';
-                document.getElementById('chat-interface').style.display = 'flex';
-                document.getElementById('room-id-display').innerText = pin;
-
-                loadMessages();
-            } else {
-                alert("Veuillez entrer un nom et un code à 4 chiffres.");
+            // التحقق من الشروط
+            if (!name || pass.length < 3 || pass.length > 5 || room.length < 4 || room.length > 9) {
+                status.innerText = "Erreur: Pass (3-5), Room (4-9 chiffres).";
+                return;
             }
+
+            status.innerText = "Vérification...";
+
+            // التحقق من المستخدم في قاعدة البيانات
+            db.ref('users/' + name).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    // المستخدم موجود: تحقق من كلمة المرور
+                    const userData = snapshot.val();
+                    if (userData.password === pass) {
+                        joinRoom(name, room);
+                    } else {
+                        status.innerText = "Mot de passe incorrect!";
+                    }
+                } else {
+                    // مستخدم جديد: إنشاء حساب وتسجيل IP
+                    db.ref('users/' + name).set({
+                        password: pass,
+                        created_ip: userIP,
+                        last_login: Date.now()
+                    }).then(() => {
+                        joinRoom(name, room);
+                    });
+                }
+            });
         }
 
-        // Fonction pour envoyer
-        function sendMessage() {
-            const msgInput = document.getElementById('msg-input');
-            const msg = msgInput.value.trim();
+        function joinRoom(name, room) {
+            currentUser = name;
+            currentRoom = room;
 
-            if (msg !== "") {
-                db.ref('rooms/' + currentRoom).push({
-                    name: currentUser,
-                    text: msg,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
-                msgInput.value = ""; 
-            }
-        }
+            // تسجيل دخول الـ IP في الغرفة (للمدير)
+            db.ref('rooms/' + room + '/logs').push({
+                user: name,
+                ip: userIP,
+                time: Date.now()
+            });
 
-        function handleEnter(e) {
-            if(e.key === 'Enter') sendMessage();
-        }
-
-        // Chargement des messages
-        function loadMessages() {
-            const messagesDiv = document.getElementById('messages');
+            document.getElementById('auth-interface').style.display = 'none';
+            document.getElementById('chat-interface').style.display = 'flex';
+            document.getElementById('room-display').innerText = room;
             
-            db.ref('rooms/' + currentRoom).limitToLast(50).on('child_added', function(snapshot) {
-                const data = snapshot.val();
-                
-                const msgElement = document.createElement('div');
-                msgElement.classList.add('msg');
-                msgElement.innerHTML = `
-                    <span class="sender">${data.name}</span> 
-                    <span class="text">${data.text}</span>
+            loadMessages();
+        }
+
+        // --- 4. إرسال الرسائل (نص) ---
+        function sendMessage() {
+            const input = document.getElementById('msg-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            pushMessage({ type: 'text', content: txt });
+            input.value = "";
+        }
+
+        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
+
+        // --- 5. نظام الصوت (Base64) ---
+        // ملاحظة: نقوم بتخزين الصوت كنص لتجنب تعقيدات التخزين السحابي
+        async function startRecording() {
+            const btn = document.getElementById('record-btn');
+            btn.innerText = "ENREGISTREMENT...";
+            btn.classList.add('recording');
+            audioChunks = [];
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+            } catch(e) {
+                alert("Erreur Micro: " + e.message);
+                resetRecBtn();
+            }
+        }
+
+        function stopRecording() {
+            if(!mediaRecorder || mediaRecorder.state === "inactive") return;
+            mediaRecorder.stop();
+            
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); // webm خفيف الحجم
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    const base64Audio = reader.result;
+                    pushMessage({ type: 'audio', content: base64Audio });
+                };
+            };
+            resetRecBtn();
+        }
+
+        function resetRecBtn() {
+            const btn = document.getElementById('record-btn');
+            btn.innerText = "MAINTENIR POUR PARLER (AUDIO)";
+            btn.classList.remove('recording');
+        }
+
+        // --- 6. التعامل مع قاعدة البيانات ---
+        function pushMessage(data) {
+            db.ref('rooms/' + currentRoom + '/messages').push({
+                user: currentUser,
+                type: data.type,
+                content: data.content,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+        }
+
+        function loadMessages() {
+            const div = document.getElementById('messages');
+            db.ref('rooms/' + currentRoom + '/messages').limitToLast(20).on('child_added', snapshot => {
+                const msg = snapshot.val();
+                const el = document.createElement('div');
+                el.classList.add('msg');
+
+                let contentHtml = "";
+                if (msg.type === 'text') {
+                    contentHtml = `<div class="text">${msg.content}</div>`;
+                } else if (msg.type === 'audio') {
+                    contentHtml = `<audio controls src="${msg.content}"></audio>`;
+                }
+
+                el.innerHTML = `
+                    <div class="meta">
+                        <span>${msg.user}</span>
+                        <span style="font-size:0.8em; opacity:0.5">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    ${contentHtml}
                 `;
-                
-                messagesDiv.appendChild(msgElement);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                div.appendChild(el);
+                div.scrollTop = div.scrollHeight;
             });
         }
     </script>
