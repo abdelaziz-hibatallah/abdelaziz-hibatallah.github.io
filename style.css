@@ -20,18 +20,24 @@ html[dir="rtl"] { text-align: right; }
     border: 1px solid #333;
     border-radius: 5px;
     background-color: #050505;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.15);
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-/* Lang & Login Screens */
-#lang-screen, #login-screen { display: flex; flex-direction: column; justify-content: center; height: 100%; }
-.lang-buttons { text-align: center; }
-.matrix-text { letter-spacing: 3px; font-size: 0.8em; margin-bottom: 20px; opacity: 0.8; text-align: center; }
+/* شاشة اللغة والغموض */
+.mystery-text {
+    color: #888;
+    font-size: 0.7em;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    font-style: italic;
+    text-align: center;
+}
 
-h1 { letter-spacing: 5px; text-align: center; color: #fff; margin-bottom: 10px; }
+#lang-screen, #login-screen { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+h1 { letter-spacing: 5px; text-align: center; color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px #0f0; }
 .subtitle { text-align: center; color: #555; font-size: 0.7em; margin-bottom: 30px; letter-spacing: 2px; }
 
 input {
@@ -47,7 +53,7 @@ input {
     box-sizing: border-box;
     text-align: center;
 }
-input:focus { border-color: #0f0; }
+input:focus { border-color: #0f0; background: #0a0a0a; }
 
 button {
     width: 100%;
@@ -62,7 +68,7 @@ button {
     text-transform: uppercase;
     transition: 0.3s;
 }
-button:hover { opacity: 0.8; }
+button:hover { opacity: 0.8; box-shadow: 0 0 10px #0f0; }
 
 .lang-buttons button { background: #000; border: 1px solid #0f0; color: #0f0; margin-top: 10px;}
 .lang-buttons button:hover { background: #0f0; color: #000; }
@@ -70,7 +76,7 @@ button:hover { opacity: 0.8; }
 .error-text { color: red; text-align: center; font-size: 0.8em; margin-top: 10px; height: 20px; }
 .credit-footer { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 0.6em; color: #444; }
 
-/* Chat Screen */
+/* شاشة الشات المحدثة */
 .hidden { display: none !important; }
 #chat-screen { display: flex; flex-direction: column; height: 100%; }
 .chat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; }
@@ -83,29 +89,54 @@ button:hover { opacity: 0.8; }
     padding: 15px;
     margin: 15px 0;
     background: #000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.message { padding: 5px 10px; margin-bottom: 10px; border-left: 2px solid #333; }
-.message-username { font-weight: bold; margin-bottom: 2px; display: block; }
-.message-text { color: #ccc; word-wrap: break-word;}
-.message-time { font-size: 0.6em; color: #444; float: right; margin-top: 5px; }
-
-/* Audio Player Style */
-audio {
+/* تصميم الرسائل يمين/يسار */
+.msg-container {
+    display: flex;
     width: 100%;
-    height: 30px;
-    margin-top: 5px;
-    filter: invert(1); /* جعل المشغل يتناسب مع اللون الأسود */
 }
 
-/* Input Area Update */
+.msg-container.right { justify-content: flex-end; } /* رسائلي يمين */
+.msg-container.left { justify-content: flex-start; } /* رسائلهم يسار */
+
+.message {
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+    position: relative;
+    word-wrap: break-word;
+}
+
+/* ألوان الرسائل */
+.msg-container.right .message {
+    background: #0a2a0a; /* أخضر غامق جداً لي */
+    border-right: 3px solid #0f0;
+    text-align: right;
+}
+
+.msg-container.left .message {
+    background: #111;
+    border-left: 3px solid #444;
+    text-align: left;
+}
+
+.message-username { font-weight: bold; font-size: 0.8em; margin-bottom: 3px; display: block; }
+.message-text { color: #ddd; font-size: 0.95em; }
+.message-time { font-size: 0.55em; color: #666; display: block; margin-top: 5px; opacity: 0.7; }
+
+/* Audio Player */
+audio { width: 150px; height: 30px; margin-top: 5px; filter: invert(1); }
+
+/* Input Area */
 .input-area { display: flex; gap: 5px; align-items: center; }
 .input-area button { margin: 0; padding: 15px; width: auto; }
-.input-area input { flex-grow: 1; }
+.input-area input { flex-grow: 1; text-align: left; padding-left: 10px; }
 
 #btn-mic { background: #333; color: #fff; border: 1px solid #555; font-size: 1.2em; }
 #btn-mic.recording { background: #f00; color: #fff; animation: pulse 1s infinite; border-color: #f00; }
-
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
 #recording-status { text-align: center; color: #f00; font-size: 0.7em; margin-top: 5px; }
