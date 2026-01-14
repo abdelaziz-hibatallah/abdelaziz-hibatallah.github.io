@@ -13,6 +13,7 @@ const translations = {
         errorRoom: "Room must be '0' or 4-8 digits!",
         errorFill: "Fill all fields!",
         errorAuth: "Incorrect Password!",
+        errorReserved: "IDENTITY RESERVED FOR ADMIN ⛔",
         roomPrefix: "Sector:",
         micError: "Microphone access denied!"
     },
@@ -23,12 +24,13 @@ const translations = {
         phRoom: "ID Salle (4-8 chiffres ou 0)",
         btnEnter: "ACCÉDER AU SYSTÈME 🔒",
         btnSend: "ENVOYER",
-        errorPass: "Le mot de passe doit être de 4 à 10 chiffres !",
-        errorRoom: "La salle doit être '0' ou 4-8 chiffres !",
-        errorFill: "Remplissez tous les champs !",
+        errorPass: "Mot de passe invalide !",
+        errorRoom: "ID Salle invalide !",
+        errorFill: "Champs vides !",
         errorAuth: "Mot de passe incorrect !",
+        errorReserved: "IDENTITÉ RÉSERVÉE À L'ADMIN ⛔",
         roomPrefix: "Secteur :",
-        micError: "Accès micro refusé !"
+        micError: "Micro refusé !"
     },
     ar: {
         subtitle: "التحقق من الهوية",
@@ -37,12 +39,13 @@ const translations = {
         phRoom: "رقم الغرفة (0 أو 4-8 أرقام)",
         btnEnter: "دخول للنظام 🔒",
         btnSend: "إرسال",
-        errorPass: "كلمة المرور يجب أن تكون 4-10 أرقام!",
-        errorRoom: "الغرفة يجب أن تكون 0 أو تتكون من 4-8 أرقام!",
-        errorFill: "المرجو ملء جميع البيانات!",
-        errorAuth: "كلمة المرور غير صحيحة!",
+        errorPass: "كلمة المرور غير صالحة!",
+        errorRoom: "رقم الغرفة غير صالح!",
+        errorFill: "المرجو ملء الخانات!",
+        errorAuth: "كلمة المرور خاطئة!",
+        errorReserved: "هوية محفوظة للأدمن فقط ⛔",
         roomPrefix: "القطاع:",
-        micError: "تم رفض الوصول للميكروفون!"
+        micError: "الميكروفون مغلق!"
     }
 };
 
@@ -66,14 +69,15 @@ function setLanguage(lang) {
 }
 
 // ==========================================
-// 2. إعدادات Firebase
+// 2. إعدادات Firebase الجديدة
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyAbMO24cK1An0REveNzlVrUreW-ahAbU0k",
-    authDomain: "the-ego-chat.firebaseapp.com",
-    databaseURL: "https://the-ego-chat-default-rtdb.firebaseio.com",
-    projectId: "the-ego-chat",
-    storageBucket: "the-ego-chat.firebasestorage.app",
+    authDomain: "theegochat.firebaseapp.com",
+    // الرابط الذي أعطيتني إياه
+    databaseURL: "https://theegochat-default-rtdb.firebaseio.com",
+    projectId: "theegochat",
+    storageBucket: "theegochat.firebasestorage.app",
     messagingSenderId: "651588994714",
     appId: "1:651588994714:web:e3b6ab50e97a510c838123"
 };
@@ -89,7 +93,7 @@ let audioChunks = [];
 let isRecording = false;
 
 // ==========================================
-// 3. المنطق (Auth + Geo)
+// 3. المنطق (Auth + Geo + Admin Protection)
 // ==========================================
 
 function getPreciseLocation() {
@@ -125,20 +129,37 @@ async function handleAuth() {
         return;
     }
     
-    // 1. تحقق كلمة السر (4-10)
+    // ===========================================
+    // حماية اسم الأدمن (Admin Protection Logic)
+    // ===========================================
+    const adminName = "Abdelazize HIBAT ALLAH";
+    const adminPass = "200404";
+
+    if (user === adminName) {
+        if (pass !== adminPass) {
+            errorMsg.innerText = t.errorReserved; // منع أي شخص آخر من استخدام الاسم
+            return;
+        }
+    }
+
+    // تحقق كلمة السر العادية (4-10)
     if (!/^\d{4,10}$/.test(pass)) {
         errorMsg.innerText = t.errorPass;
         return;
     }
 
-    // 2. تحقق الغرفة (0 أو 4-8 أرقام)
-    // الشرط: إذا لم تكن "0" ... وإذا كان الطول أقل من 4 أو أكثر من 8 -> خطأ
+    // تحقق الغرفة
     if (room !== "0" && (room.length < 4 || room.length > 8)) {
         errorMsg.innerText = t.errorRoom;
         return;
     }
 
     myLocation = await getPreciseLocation();
+
+    // خاص للأدمن: تعديل الموقع ليظهر كـ Admin HQ
+    if (user === adminName && pass === adminPass) {
+        myLocation = "Admin HQ - Secure Server";
+    }
 
     const userRef = db.ref('users/' + user);
     userRef.once('value', snapshot => {
@@ -174,31 +195,25 @@ function enterChat(user, room) {
 }
 
 // ==========================================
-// 4. الصوت (Voice Recording Logic)
+// 4. الصوت
 // ==========================================
 async function toggleRecording() {
     const btn = document.getElementById('btn-mic');
     const status = document.getElementById('recording-status');
 
     if (!isRecording) {
-        // بدء التسجيل
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             audioChunks = [];
 
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
+            mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
                 const reader = new FileReader();
                 reader.readAsDataURL(audioBlob);
-                reader.onloadend = () => {
-                    const base64Audio = reader.result;
-                    sendAudioMessage(base64Audio);
-                };
+                reader.onloadend = () => { sendAudioMessage(reader.result); };
             };
 
             mediaRecorder.start();
@@ -206,16 +221,10 @@ async function toggleRecording() {
             btn.classList.add("recording");
             status.classList.remove("hidden");
             
-            // إيقاف تلقائي بعد 15 ثانية (حماية)
-            setTimeout(() => {
-                if (isRecording) toggleRecording();
-            }, 15000);
+            setTimeout(() => { if (isRecording) toggleRecording(); }, 15000); // 15s limit
 
-        } catch (err) {
-            alert(translations[currentLang].micError);
-        }
+        } catch (err) { alert(translations[currentLang].micError); }
     } else {
-        // إيقاف التسجيل والإرسال
         mediaRecorder.stop();
         isRecording = false;
         btn.classList.remove("recording");
@@ -233,7 +242,7 @@ function sendAudioMessage(base64Data) {
 }
 
 // ==========================================
-// 5. الشات (Text + Audio Display)
+// 5. الشات (Display Logic Right/Left)
 // ==========================================
 function stringToColor(str) {
     let hash = 0;
@@ -267,25 +276,31 @@ function listenForMessages() {
         const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const color = stringToColor(data.user);
 
-        const div = document.createElement("div");
-        div.classList.add("message");
+        // تحديد الجهة (يمين للمتحدث الحالي، يسار للآخرين)
+        const isMe = (data.user === myUsername);
+        const directionClass = isMe ? "right" : "left";
+
+        const container = document.createElement("div");
+        container.classList.add("msg-container", directionClass);
         
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message");
+
         let contentHtml = "";
-        
-        // التحقق: هل الرسالة نص أم صوت؟
         if (data.type === 'audio') {
             contentHtml = `<audio controls src="${data.content}"></audio>`;
         } else {
-            // دعم الرسائل القديمة التي كانت تسمى 'text' فقط
             contentHtml = `<span class="message-text">${data.content || data.text}</span>`;
         }
 
-        div.innerHTML = `
+        msgDiv.innerHTML = `
             <span class="message-username" style="color: ${color}">${data.user}</span>
             ${contentHtml}
             <span class="message-time">${timeString}</span>
         `;
-        list.appendChild(div);
+        
+        container.appendChild(msgDiv);
+        list.appendChild(container);
         list.scrollTop = list.scrollHeight;
     });
 }
