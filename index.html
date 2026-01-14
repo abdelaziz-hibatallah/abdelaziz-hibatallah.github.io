@@ -1,278 +1,47 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="google-site-verification" content="2hsb7JAuJkyuUrMGZU-Vr2cNw2UMcvoq_MhrbZIsoKk" />
-
-    <title>The Ego | Spy-Free Communication</title>
-    
-    <meta name="description" content="The Ego - Spy-Free Communication System. Secure chat with encryption and location tracking for security analysis. Created by HIBAT ALLAH Abdelaziz.">
-    <meta name="keywords" content="The Ego, Spy-Free, Chat, Cybersecurity, PFE, HIBAT ALLAH Abdelaziz, Meknes, Secure Communication">
-    <meta name="author" content="HIBAT ALLAH Abdelaziz">
-    <meta name="robots" content="index, follow">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-    <style>
-        /* Design System */
-        :root { --primary: #fff; --bg: #000; --panel: #0a0a0a; --red: #ff3b30; --green: #32d74b; }
-        body { background: var(--bg); color: #ccc; font-family: 'Segoe UI', sans-serif; height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
-        
-        /* Container */
-        .container { width: 90%; max-width: 450px; background: var(--panel); padding: 30px; border: 1px solid #333; border-radius: 12px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9); position: relative; z-index: 2; }
-        
-        /* Typography */
-        h1 { color: var(--primary); letter-spacing: 3px; font-weight: 300; margin-bottom: 5px; font-size: 24px; }
-        .subtitle { color: #666; font-size: 0.9em; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; }
-        
-        /* Inputs */
-        input.auth-input { background: #151515; border: 1px solid #333; color: #fff; padding: 15px; margin: 8px 0; width: 85%; text-align: center; border-radius: 6px; outline: none; font-size: 16px; transition: 0.3s; }
-        input.auth-input:focus { border-color: #666; background: #222; }
-        
-        /* Buttons */
-        .main-btn { background: var(--primary); color: #000; border: none; padding: 15px; width: 92%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
-        .main-btn:hover { background: #ddd; transform: translateY(-2px); }
-
-        /* Footer Info */
-        .footer-info { margin-top: 20px; color: #444; font-size: 0.75em; font-family: monospace; }
-
-        /* Chat Interface */
-        #chat-interface { display: none; height: 95vh; flex-direction: column; padding: 15px; width: 95%; max-width: 500px; border: none; background: transparent; box-shadow: none;}
-        #chat-box { background: #111; border: 1px solid #333; border-radius: 10px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        
-        #room-header { padding: 15px; border-bottom: 1px solid #222; background: #151515; display: flex; justify-content: space-between; align-items: center; }
-        #messages { flex: 1; overflow-y: auto; padding: 15px; background: #000; scroll-behavior: smooth; }
-        
-        /* Message Bubbles */
-        .msg { margin-bottom: 15px; display: flex; flex-direction: column; align-items: flex-start; }
-        .msg-content { background: #1f1f1f; padding: 10px 15px; border-radius: 15px; border-bottom-left-radius: 2px; max-width: 80%; position: relative; }
-        .sender-info { font-size: 0.7em; color: #666; margin-bottom: 4px; margin-left: 2px; }
-        .msg-text { color: #eee; line-height: 1.4; }
-        
-        /* Input Area */
-        .input-area { padding: 10px; background: #151515; border-top: 1px solid #333; display: flex; align-items: center; gap: 10px; }
-        #msg-input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; outline: none; font-size: 16px; }
-        
-        /* Mic Button */
-        .mic-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: #333; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-        .mic-btn svg { width: 20px; height: 20px; fill: currentColor; }
-        .mic-btn.recording { background: var(--red); box-shadow: 0 0 15px var(--red); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-
-        /* Send Button */
-        .send-btn { background: transparent; border: none; color: var(--primary); cursor: pointer; }
-        .send-btn svg { width: 24px; height: 24px; fill: currentColor; transform: rotate(-45deg); margin-top: -3px; }
-
-        /* Audio Player */
-        audio { height: 30px; margin-top: 5px; width: 200px; }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-    </style>
+    <title>THE EGO | Spy-Free Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
-    <div id="auth-interface" class="container">
-        <h1>THE EGO</h1>
-        <div class="subtitle">Spy-Free Communication</div>
-        
-        <p id="status-msg" style="color:var(--red); font-size:0.85em; min-height: 1.2em;"></p>
-
-        <input type="text" id="username" class="auth-input" placeholder="Pseudo (Nom)">
-        <input type="password" id="user-pass" class="auth-input" maxlength="5" placeholder="Mot de passe (3-5 chiffres)">
-        
-        <div style="width: 50%; height: 1px; background: #333; margin: 20px auto;"></div>
-
-        <input type="number" id="room-code" class="auth-input" placeholder="Code Chambre (4-9 chiffres)">
-        
-        <button class="main-btn" onclick="handleLogin()">CONNEXION</button>
-
-        <div class="footer-info">
-            Created by <strong style="color:#888">HIBAT ALLAH Abdelaziz</strong><br>
-            Projet de Fin d'Études 2026
+    <div class="container">
+        <div id="login-screen">
+            <h1>THE EGO</h1>
+            <p class="subtitle">SPY-FREE COMMUNICATION</p>
+            
+            <input type="text" id="username" placeholder="اسم مستعار (Pseudo)" autocomplete="off">
+            <input type="number" id="room-code" placeholder="كود الغرفة (مثلاً: 9955)" autocomplete="off">
+            
+            <button onclick="login()">دخول آمن <span style="font-size:12px">🔒</span></button>
+            
+            <p class="footer-text">
+                Connection Secured via HTTPS<br>
+                No Logs Stored Permanently
+            </p>
         </div>
-    </div>
 
-    <div id="chat-interface">
-        <div id="chat-box">
-            <div id="room-header">
-                <span style="color:#888; font-size:0.9em;">ROOM: <strong style="color:#fff" id="room-display"></strong></span>
-                <button onclick="location.reload()" style="background:none; border:1px solid #333; color:#666; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.7em;">QUITTER</button>
+        <div id="chat-screen" class="hidden">
+            <div class="chat-header">
+                <span id="room-display">الغرفة: ...</span>
+                <button onclick="logout()" class="exit-btn">خروج ❌</button>
             </div>
             
-            <div id="messages"></div>
-            
+            <div id="messages-list">
+                </div>
+
             <div class="input-area">
-                <button id="record-btn" class="mic-btn" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()">
-                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                </button>
-                <input type="text" id="msg-input" placeholder="Message..." onkeypress="handleEnter(event)">
-                <button class="send-btn" onclick="sendMsg()">
-                    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                </button>
+                <input type="text" id="message-input" placeholder="اكتب رسالة مشفرة..." autocomplete="off">
+                <button onclick="sendMessage()">إرسال ➤</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // --- CONFIGURATION FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBwRtHgM5cBTxci9ffzMOPp9POTTy-PbWE",
-            authDomain: "theegochat.firebaseapp.com",
-            databaseURL: "https://theegochat-default-rtdb.firebaseio.com", 
-            projectId: "theegochat",
-            storageBucket: "theegochat.firebasestorage.app",
-            messagingSenderId: "256766104582",
-            appId: "1:256766104582:web:90ce5a80e009d108529f87"
-        };
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // --- VARIABLES ---
-        let currentUser = null, currentRoom = null;
-        let locData = { city: "Unknown", country: "Unknown", ip: "Hidden", map: "" };
-        let recorder, chunks = [], streamRef = null;
-
-        // --- 1. LOCALISATION (IP) ---
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                locData = {
-                    city: data.city || "Unknown",
-                    country: data.country_name || "Unknown",
-                    ip: data.ip || "Hidden",
-                    isp: data.org || "Unknown",
-                    map: `http://googleusercontent.com/maps.google.com/?q=${data.latitude},${data.longitude}`
-                };
-            })
-            .catch(e => console.log("Localisation bloquée par AdBlock"));
-
-        // --- 2. LOGIN SYSTEM ---
-        function handleLogin() {
-            let name = document.getElementById('username').value.trim();
-            name = name.replace(/[.#$\[\]\/]/g, "_");
-            
-            const pass = document.getElementById('user-pass').value.trim();
-            const room = document.getElementById('room-code').value.trim();
-            const status = document.getElementById('status-msg');
-
-            if (!name || pass.length < 3 || room.length < 4) {
-                status.innerText = "Info Invalide (Pass min 3, Room min 4)"; return;
-            }
-
-            status.innerText = "Vérification...";
-
-            db.ref('users/' + name).once('value')
-                .then(snapshot => {
-                    if (snapshot.exists()) {
-                        if (snapshot.val().password === pass) join(name, room);
-                        else status.innerText = "Mot de passe incorrect!";
-                    } else {
-                        db.ref('users/' + name).set({
-                            password: pass,
-                            last_location: locData,
-                            created_at: Date.now()
-                        }).then(() => join(name, room));
-                    }
-                })
-                .catch(err => {
-                    status.innerText = "Erreur Connexion (Check Internet)";
-                });
-        }
-
-        function join(name, room) {
-            currentUser = name; currentRoom = room;
-            db.ref('rooms/' + room + '/logs').push({
-                user: name,
-                location: locData,
-                time: Date.now()
-            });
-
-            document.getElementById('auth-interface').style.display = 'none';
-            document.getElementById('chat-interface').style.display = 'flex';
-            document.getElementById('room-display').innerText = room;
-            loadMsgs();
-        }
-
-        // --- 3. MESSAGING ---
-        function sendMsg() {
-            const inp = document.getElementById('msg-input');
-            const txt = inp.value.trim();
-            if(txt) push({type: 'text', content: txt});
-            inp.value = "";
-        }
-        function handleEnter(e) { if(e.key === 'Enter') sendMsg(); }
-
-        // --- 4. AUDIO SYSTEM ---
-        async function startRec() {
-            if(!navigator.mediaDevices) return alert("Microphone non supporté");
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-                streamRef = stream;
-                recorder = new MediaRecorder(stream);
-                recorder.start();
-                document.getElementById('record-btn').classList.add('recording');
-                chunks = [];
-                recorder.ondataavailable = e => chunks.push(e.data);
-            } catch(e) { 
-                alert("Accès Micro refusé."); 
-            }
-        }
-
-        function stopRec() {
-            if(recorder && recorder.state !== "inactive") {
-                recorder.stop();
-                document.getElementById('record-btn').classList.remove('recording');
-                
-                recorder.onstop = () => {
-                    const blob = new Blob(chunks, {type:'audio/webm;codecs=opus'});
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = () => {
-                        const base64 = reader.result;
-                        if(base64.length < 800000) push({type: 'audio', content: base64});
-                        else alert("Audio trop long !");
-                    };
-                    if(streamRef) streamRef.getTracks().forEach(track => track.stop());
-                };
-            }
-        }
-
-        // --- 5. DATABASE ---
-        function push(data) {
-            db.ref('rooms/' + currentRoom + '/msgs').push({
-                u: currentUser,
-                t: data.type,
-                c: data.content,
-                time: firebase.database.ServerValue.TIMESTAMP
-            });
-        }
-
-        function loadMsgs() {
-            const box = document.getElementById('messages');
-            db.ref('rooms/' + currentRoom + '/msgs').limitToLast(30).on('child_added', s => {
-                const v = s.val();
-                const d = document.createElement('div'); 
-                d.className = 'msg';
-                const time = new Date(v.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
-                let content = "";
-                if(v.t === 'text') content = `<div class="msg-text">${v.c}</div>`;
-                else content = `<audio controls src="${v.c}"></audio>`;
-
-                d.innerHTML = `
-                    <div class="sender-info">${v.u} • ${time}</div>
-                    <div class="msg-content">${content}</div>
-                `;
-                box.appendChild(d); 
-                box.scrollTop = box.scrollHeight;
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
