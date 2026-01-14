@@ -1,0 +1,147 @@
+body {
+    background-color: #000;
+    color: #e0e0e0;
+    font-family: 'Courier New', Courier, monospace; /* خط يشبه الهاكرز */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* لمنع التمرير في الخلفية */
+}
+
+.container {
+    width: 100%;
+    max-width: 450px; /* عرض مناسب للهواتف */
+    height: 90vh; /* يغطي معظم الشاشة */
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    background-color: #0a0a0a;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Login Styles */
+#login-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+h1 { 
+    letter-spacing: 4px; 
+    text-align: center; 
+    margin-bottom: 5px; 
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.subtitle { 
+    text-align: center; 
+    color: #555; 
+    font-size: 0.75em; 
+    margin-bottom: 40px; 
+    letter-spacing: 2px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+input:focus { border-color: #555; background: #161616; }
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: #e0e0e0;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: inherit;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+button:hover { background: #fff; transform: scale(1.02); }
+
+.footer-text { 
+    text-align: center; 
+    color: #333; 
+    font-size: 0.6em; 
+    margin-top: 50px; 
+    line-height: 1.5;
+}
+
+/* Chat Styles */
+.hidden { display: none !important; }
+
+#chat-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #222;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.exit-btn {
+    width: auto;
+    padding: 8px 15px;
+    margin: 0;
+    background: #220000;
+    color: #ff4444;
+    font-size: 0.8em;
+}
+
+#messages-list {
+    flex-grow: 1; /* يأخذ المساحة المتبقية */
+    overflow-y: auto;
+    border: 1px solid #1a1a1a;
+    padding: 15px;
+    background: #050505;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* شكل الرسالة */
+.message { 
+    padding: 8px 12px; 
+    background: #0f0f0f;
+    border-radius: 8px;
+    border-left: 3px solid #333; /* خط جمالي بجانب الرسالة */
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.message-username { font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 3px; }
+.message-text { color: #ccc; font-size: 1em; line-height: 1.4; }
+.message-time { font-size: 0.6em; color: #444; float: left; margin-top: 5px; }
+
+.input-area { display: flex; gap: 10px; }
+.input-area button { width: 25%; margin: 0; font-size: 1.2em; }
