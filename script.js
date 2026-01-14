@@ -69,11 +69,12 @@ function setLanguage(lang) {
 }
 
 // ==========================================
-// 2. Firebase Config
+// 2. Firebase Configuration
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyAbMO24cK1An0REveNzlVrUreW-ahAbU0k",
     authDomain: "theegochat.firebaseapp.com",
+    // الرابط الدقيق الذي حددته
     databaseURL: "https://theegochat-default-rtdb.firebaseio.com",
     projectId: "theegochat",
     storageBucket: "theegochat.firebasestorage.app",
@@ -92,33 +93,56 @@ let audioChunks = [];
 let isRecording = false;
 
 // ==========================================
-// 3. Logic (Auth + Admin Dashboard)
+// 3. Robust Location Logic (حل مشكلة Hidden Location)
 // ==========================================
 function getPreciseLocation() {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
+        // 1. محاولة GPS (الأدق)
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    resolve(`GPS: ${position.coords.latitude}, ${position.coords.longitude}`);
+                    resolve(`GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`);
                 },
-                async () => {
-                    try {
-                        const res = await fetch('https://ipapi.co/json/');
-                        const data = await res.json();
-                        resolve(`IP: ${data.city}, ${data.country_name}`);
-                    } catch(e) { resolve("Hidden Location"); }
-                }
+                async (error) => {
+                    // إذا فشل GPS، ننتقل للخطة البديلة (IP)
+                    const ipLoc = await getIpLocation();
+                    resolve(ipLoc);
+                },
+                { timeout: 5000 }
             );
-        } else { resolve("No GPS Support"); }
+        } else {
+            const ipLoc = await getIpLocation();
+            resolve(ipLoc);
+        }
     });
 }
 
-// ⚠️ هذه هي الدالة المعدلة لإصلاح مشكلة الأدمن
+// دالة جلب الموقع عبر الإنترنت (Plan B & C)
+async function getIpLocation() {
+    try {
+        const res1 = await fetch('https://ipwho.is/');
+        const data1 = await res1.json();
+        if(data1.success) return `IP: ${data1.city}, ${data1.country} (${data1.ip})`;
+        throw new Error("Service 1 failed");
+    } catch (e) {
+        try {
+            const res2 = await fetch('https://ipapi.co/json/');
+            const data2 = await res2.json();
+            return `IP: ${data2.city}, ${data2.country_name} (${data2.ip})`;
+        } catch (e2) {
+            return "Hidden Location (VPN/AdBlock)";
+        }
+    }
+}
+
+// ==========================================
+// 4. Authentication Logic (الأدمن + المستخدمين)
+// ==========================================
 async function handleAuth() {
     const t = translations[currentLang];
     const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value.trim();
-    const room = document.getElementById("room-code").value.trim(); // تأكدنا من إزالة الفراغات
+    const room = document.getElementById("room-code").value.trim();
     const errorMsg = document.getElementById("error-msg");
 
     errorMsg.innerText = "";
@@ -128,39 +152,37 @@ async function handleAuth() {
     const adminName = "Abdelazize HIBAT ALLAH";
     const adminPass = "200404";
 
-    // 1. التحقق من الأدمن أولاً وبشكل صارم
+    // --- منطق الأدمن ---
     if (user === adminName) {
         if (pass === adminPass) {
-            // إذا كان أدمن وكلمة السر صحيحة
+            // أدمن + كلمة سر صحيحة
             if (room === "0") {
-                // تفعيل وضع "God Mode"
                 myUsername = user;
-                myLocation = "GOD MODE - Monitoring";
+                myLocation = "GOD MODE - Monitoring"; // موقع مميز للأدمن
                 openAdminDashboard();
-                return; // الخروج من الدالة فوراً لكي لا يدخل كشات عادي
+                return;
             }
+            // أدمن يريد دخول غرفة عادية
+            myLocation = "Admin - Encrypted";
         } else {
-            // الاسم صحيح لكن كلمة السر خطأ
+            // أدمن + كلمة سر خطأ (محاولة انتحال شخصية)
             errorMsg.innerText = t.errorReserved;
             return;
         }
+    } else {
+        // --- منطق المستخدم العادي ---
+        // منع دخول الغرفة 0
+        if (room === "0") { errorMsg.innerText = t.errorReserved; return; }
+        // التحقق من طول الغرفة
+        if (room.length < 4 || room.length > 8) { errorMsg.innerText = t.errorRoom; return; }
+        // التحقق من كلمة المرور
+        if (!/^\d{4,10}$/.test(pass)) { errorMsg.innerText = t.errorPass; return; }
+        
+        // جلب الموقع للمستخدم العادي
+        myLocation = await getPreciseLocation();
     }
 
-    // 2. التحقق للمستخدمين العاديين
-    if (!/^\d{4,10}$/.test(pass)) { errorMsg.innerText = t.errorPass; return; }
-    
-    // شرط الغرفة: يجب ألا تكون 0، ويجب أن تكون بين 4 و 8 أرقام
-    if (room === "0") {
-        // إذا حاول مستخدم عادي دخول الغرفة 0
-        errorMsg.innerText = t.errorReserved; 
-        return;
-    }
-    
-    if (room.length < 4 || room.length > 8) { errorMsg.innerText = t.errorRoom; return; }
-
-    myLocation = await getPreciseLocation();
-
-    // 3. الدخول للشات العادي
+    // التعامل مع قاعدة البيانات
     const userRef = db.ref('users/' + user);
     userRef.once('value', snapshot => {
         if (snapshot.exists()) {
@@ -186,17 +208,16 @@ function enterChat(user, room) {
     listenForMessages();
 }
 
-// ⚠️ دالة فتح لوحة التحكم
+// ==========================================
+// 5. Admin Dashboard (God Mode)
+// ==========================================
 function openAdminDashboard() {
-    // إخفاء الشاشات الأخرى
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("chat-screen").classList.add("hidden");
-    // إظهار لوحة التحكم
     document.getElementById("admin-screen").classList.remove("hidden");
     
     const list = document.getElementById("active-rooms-list");
 
-    // جلب الغرف
     db.ref("rooms").on("value", snapshot => {
         list.innerHTML = "";
         const rooms = snapshot.val();
@@ -233,7 +254,7 @@ window.joinRoomFromAdmin = function(roomId) {
 };
 
 // ==========================================
-// 4. Chat & Audio & Matrix
+// 6. Chat & Audio Functions
 // ==========================================
 async function toggleRecording() {
     const btn = document.getElementById('btn-mic');
@@ -310,7 +331,9 @@ function listenForMessages() {
 function logout() { location.reload(); }
 document.getElementById("message-input").addEventListener("keypress", function (e) { if (e.key === "Enter") sendMessage(); });
 
-// Matrix Effect
+// ==========================================
+// 7. Matrix Rain Effect (خلفية متحركة)
+// ==========================================
 const canvas = document.getElementById('matrix');
 if(canvas) {
     const ctx = canvas.getContext('2d');
