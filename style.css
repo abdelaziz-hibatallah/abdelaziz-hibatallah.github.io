@@ -7,7 +7,18 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* مهم جداً لمنع ظهور أشرطة التمرير */
+}
+
+/* تنسيق خلفية الماتريكس */
+#matrix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* وضعه خلف كل شيء */
+    opacity: 0.4; /* شفافية خفيفة لكي لا يشتت الانتباه */
 }
 
 html[dir="rtl"] { text-align: right; }
@@ -19,123 +30,49 @@ html[dir="rtl"] { text-align: right; }
     padding: 20px;
     border: 1px solid #333;
     border-radius: 5px;
-    background-color: #050505;
-    box-shadow: 0 0 25px rgba(0, 255, 0, 0.15);
+    /* خلفية شبه شفافة لكي تظهر الأرقام خلفها قليلاً */
+    background-color: rgba(5, 5, 5, 0.95); 
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
     display: flex;
     flex-direction: column;
     position: relative;
+    z-index: 1; /* وضعه فوق الخلفية */
 }
 
-/* شاشة اللغة والغموض */
-.mystery-text {
-    color: #888;
-    font-size: 0.7em;
-    letter-spacing: 2px;
-    margin-bottom: 30px;
-    font-style: italic;
-    text-align: center;
-}
-
+/* باقي التنسيقات كما هي تماماً */
+.mystery-text { color: #888; font-size: 0.7em; letter-spacing: 2px; margin-bottom: 30px; font-style: italic; text-align: center; }
 #lang-screen, #login-screen { display: flex; flex-direction: column; justify-content: center; height: 100%; }
 h1 { letter-spacing: 5px; text-align: center; color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px #0f0; }
 .subtitle { text-align: center; color: #555; font-size: 0.7em; margin-bottom: 30px; letter-spacing: 2px; }
-
-input {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0;
-    background: #111;
-    border: 1px solid #333;
-    color: #fff;
-    border-radius: 3px;
-    outline: none;
-    font-family: inherit;
-    box-sizing: border-box;
-    text-align: center;
-}
+input { width: 100%; padding: 15px; margin: 5px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 3px; outline: none; font-family: inherit; box-sizing: border-box; text-align: center; }
 input:focus { border-color: #0f0; background: #0a0a0a; }
-
-button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    background: #0f0;
-    color: #000;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: inherit;
-    text-transform: uppercase;
-    transition: 0.3s;
-}
+button { width: 100%; padding: 15px; margin-top: 20px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: 0.3s; }
 button:hover { opacity: 0.8; box-shadow: 0 0 10px #0f0; }
-
 .lang-buttons button { background: #000; border: 1px solid #0f0; color: #0f0; margin-top: 10px;}
 .lang-buttons button:hover { background: #0f0; color: #000; }
-
 .error-text { color: red; text-align: center; font-size: 0.8em; margin-top: 10px; height: 20px; }
 .credit-footer { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 0.6em; color: #444; }
-
-/* شاشة الشات المحدثة */
 .hidden { display: none !important; }
-#chat-screen { display: flex; flex-direction: column; height: 100%; }
+#chat-screen, #admin-screen { display: flex; flex-direction: column; height: 100%; }
 .chat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; }
 .exit-btn { width: auto; padding: 5px 10px; margin: 0; background: #220000; color: #ff4444; border: 1px solid #500; }
-
-#messages-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    border: 1px solid #111;
-    padding: 15px;
-    margin: 15px 0;
-    background: #000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* تصميم الرسائل يمين/يسار */
-.msg-container {
-    display: flex;
-    width: 100%;
-}
-
-.msg-container.right { justify-content: flex-end; } /* رسائلي يمين */
-.msg-container.left { justify-content: flex-start; } /* رسائلهم يسار */
-
-.message {
-    padding: 8px 12px;
-    border-radius: 8px;
-    max-width: 80%;
-    position: relative;
-    word-wrap: break-word;
-}
-
-/* ألوان الرسائل */
-.msg-container.right .message {
-    background: #0a2a0a; /* أخضر غامق جداً لي */
-    border-right: 3px solid #0f0;
-    text-align: right;
-}
-
-.msg-container.left .message {
-    background: #111;
-    border-left: 3px solid #444;
-    text-align: left;
-}
-
+#messages-list, #active-rooms-list { flex-grow: 1; overflow-y: auto; border: 1px solid #111; padding: 15px; margin: 15px 0; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 10px; }
+.room-card { border: 1px solid #333; padding: 10px; border-radius: 5px; background: #080808; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.room-info { font-size: 0.8em; color: #ccc; }
+.join-btn { width: auto; padding: 5px 10px; margin: 0; background: #003300; border: 1px solid #0f0; color: #0f0; font-size: 0.7em; }
+.msg-container { display: flex; width: 100%; }
+.msg-container.right { justify-content: flex-end; }
+.msg-container.left { justify-content: flex-start; }
+.message { padding: 8px 12px; border-radius: 8px; max-width: 80%; position: relative; word-wrap: break-word; }
+.msg-container.right .message { background: #0a2a0a; border-right: 3px solid #0f0; text-align: right; }
+.msg-container.left .message { background: #111; border-left: 3px solid #444; text-align: left; }
 .message-username { font-weight: bold; font-size: 0.8em; margin-bottom: 3px; display: block; }
 .message-text { color: #ddd; font-size: 0.95em; }
 .message-time { font-size: 0.55em; color: #666; display: block; margin-top: 5px; opacity: 0.7; }
-
-/* Audio Player */
 audio { width: 150px; height: 30px; margin-top: 5px; filter: invert(1); }
-
-/* Input Area */
 .input-area { display: flex; gap: 5px; align-items: center; }
 .input-area button { margin: 0; padding: 15px; width: auto; }
 .input-area input { flex-grow: 1; text-align: left; padding-left: 10px; }
-
 #btn-mic { background: #333; color: #fff; border: 1px solid #555; font-size: 1.2em; }
 #btn-mic.recording { background: #f00; color: #fff; animation: pulse 1s infinite; border-color: #f00; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
