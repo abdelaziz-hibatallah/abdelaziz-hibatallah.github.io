@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE EGO | Spy-Free Chat</title>
+    <title>THE EGO | Secure System</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -11,34 +11,54 @@
 <body>
 
     <div class="container">
-        <div id="login-screen">
+        
+        <div id="lang-screen">
             <h1>THE EGO</h1>
-            <p class="subtitle">SPY-FREE COMMUNICATION</p>
+            <p class="matrix-text">SYSTEM INITIALIZATION...</p>
+            <div class="lang-buttons">
+                <button onclick="setLanguage('en')">English [EN]</button>
+                <button onclick="setLanguage('fr')">Français [FR]</button>
+                <button onclick="setLanguage('ar')">العربية [AR]</button>
+            </div>
+            <div class="credit-footer">Created by HIBAT ALLAH Abdelaziz</div>
+        </div>
+
+        <div id="login-screen" class="hidden">
+            <h1 id="lbl-title">THE EGO</h1>
+            <p id="lbl-subtitle" class="subtitle">IDENTITY VERIFICATION</p>
             
-            <input type="text" id="username" placeholder="اسم مستعار (Pseudo)" autocomplete="off">
-            <input type="number" id="room-code" placeholder="كود الغرفة (مثلاً: 9955)" autocomplete="off">
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Username" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password (4-10 digits)" maxlength="10" autocomplete="off">
+            </div>
             
-            <button onclick="login()">دخول آمن <span style="font-size:12px">🔒</span></button>
+            <div class="input-group">
+                <input type="number" id="room-code" placeholder="Room ID (4-8 digits or 0)" autocomplete="off">
+            </div>
             
-            <p class="footer-text">
-                Connection Secured via HTTPS<br>
-                No Logs Stored Permanently
-            </p>
+            <button onclick="handleAuth()" id="btn-enter">ACCESS SYSTEM 🔒</button>
+            <p id="error-msg" class="error-text"></p>
+            
+            <div class="credit-footer">Created by HIBAT ALLAH Abdelaziz</div>
         </div>
 
         <div id="chat-screen" class="hidden">
             <div class="chat-header">
-                <span id="room-display">الغرفة: ...</span>
-                <button onclick="logout()" class="exit-btn">خروج ❌</button>
+                <span id="room-display">Room: ...</span>
+                <button onclick="logout()" class="exit-btn">LOGOUT</button>
             </div>
             
-            <div id="messages-list">
-                </div>
+            <div id="messages-list"></div>
 
             <div class="input-area">
-                <input type="text" id="message-input" placeholder="اكتب رسالة مشفرة..." autocomplete="off">
-                <button onclick="sendMessage()">إرسال ➤</button>
+                <button id="btn-mic" onclick="toggleRecording()">🎙️</button>
+                <input type="text" id="message-input" placeholder="..." autocomplete="off">
+                <button onclick="sendMessage()" id="btn-send">➤</button>
             </div>
+            <div id="recording-status" class="hidden">Recording...</div>
         </div>
     </div>
 
