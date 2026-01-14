@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Ego - Secure, Anonymous, Spy-Free Chat. No Logs, No Tracking.">
-    <meta name="google-site-verification" content="ضع_كود_جوجل_هنا" />
+    
+    <meta name="description" content="The Ego - Secure, Anonymous, Spy-Free Chat. Created by HIBAT ALLAH Abdelaziz.">
+    <meta name="author" content="HIBAT ALLAH Abdelaziz">
+    <meta name="google-site-verification" content="2hsb7JAuJkyuUrMGZU-Vr2cNw2UMcvoq_MhrbZIsoKk" />
     
     <title>THE EGO | Spy-Free Zone</title>
     <link rel="stylesheet" href="style.css">
@@ -13,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
+    <canvas id="matrix"></canvas>
 
     <div class="container">
         
@@ -49,14 +52,22 @@
             <div class="credit-footer">Dev by: Abdelazize HIBAT ALLAH</div>
         </div>
 
+        <div id="admin-screen" class="hidden">
+            <div class="chat-header">
+                <span style="color:red; font-weight:bold;">GOD MODE 👁️</span>
+                <button onclick="logout()" class="exit-btn">LOGOUT</button>
+            </div>
+            <div id="active-rooms-list">
+                <p style="text-align:center; color:#555;">Scanning network...</p>
+            </div>
+        </div>
+
         <div id="chat-screen" class="hidden">
             <div class="chat-header">
                 <span id="room-display">Room: ...</span>
                 <button onclick="logout()" class="exit-btn">LOGOUT</button>
             </div>
-            
             <div id="messages-list"></div>
-
             <div class="input-area">
                 <button id="btn-mic" onclick="toggleRecording()">🎙️</button>
                 <input type="text" id="message-input" placeholder="..." autocomplete="off">
