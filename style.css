@@ -94,3 +94,24 @@ audio { width: 150px; height: 30px; margin-top: 5px; filter: invert(1); }
 @keyframes pulse-red { 0% { opacity: 1; box-shadow: 0 0 5px #f00; } 50% { opacity: 0.7; box-shadow: 0 0 20px #f00; } 100% { opacity: 1; box-shadow: 0 0 5px #f00; } }
 
 #recording-status { text-align: center; color: #f00; font-size: 0.7em; margin-top: 5px; }
+/* تنسيق رابط انستغرام الهكر */
+.social-link {
+    color: #0f0;
+    text-decoration: none;
+    font-size: 1.1em;
+    margin-top: 10px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    font-weight: bold;
+    border-bottom: 1px solid transparent;
+}
+
+.social-link:hover {
+    opacity: 1;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #0f0;
+    color: #fff;
+    border-bottom: 1px solid #0f0;
+}
