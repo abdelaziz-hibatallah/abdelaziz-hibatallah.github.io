@@ -94,35 +94,53 @@ audio { width: 150px; height: 30px; margin-top: 5px; filter: invert(1); }
 @keyframes pulse-red { 0% { opacity: 1; box-shadow: 0 0 5px #f00; } 50% { opacity: 0.7; box-shadow: 0 0 20px #f00; } 100% { opacity: 1; box-shadow: 0 0 5px #f00; } }
 
 #recording-status { text-align: center; color: #f00; font-size: 0.7em; margin-top: 5px; }
-/* حاوية رابط انستغرام - تم تعديل الموقع */
+/* ========================================= */
+/* إصلاح مكان الانستغرام واسم المطور        */
+/* ========================================= */
+
+/* 1. اسم المطور (في أقصى الأسفل) */
+.credit-footer {
+    position: absolute;
+    bottom: 15px; /* يبتعد 15 بيكسل عن القاع */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.6em;
+    color: #444;
+    z-index: 20;
+}
+
+/* 2. حاوية رابط انستغرام (فوق الاسم مباشرة) */
 .social-container {
-    position: absolute; /* تثبيت مطلق مثل الفوتر */
-    bottom: 70px; /* يرتفع 70 بيكسل عن القاع (فوق اسمك بمسافة جيدة) */
+    position: absolute;
+    bottom: 55px; /* يبتعد 55 بيكسل عن القاع (يعني فوق الاسم بمسافة 40 بيكسل) */
     left: 0;
     width: 100%;
     text-align: center;
-    z-index: 10; /* لضمان ظهوره فوق الخلفية */
+    z-index: 30; /* لضمان أنه فوق كل شيء */
+    margin: 0 !important; /* إلغاء أي هوامش قديمة */
+    padding: 0;
 }
 
-/* تصميم الإطار (Frame) - كما هو، جميل ومضيء */
+/* تصميم الإطار نفسه */
 .ig-frame {
     display: inline-block;
-    padding: 8px 15px; /* تصغير الحشوة قليلاً ليناسب المكان */
+    padding: 6px 12px;
     border: 1px solid #0f0;
     color: #0f0;
     text-decoration: none;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 0.8em;
+    font-size: 0.75em; /* حجم مناسب */
     letter-spacing: 2px;
-    background: rgba(0, 20, 0, 0.6); /* خلفية أغمق قليلاً لقراءة أفضل */
+    background: rgba(0, 0, 0, 0.8); /* خلفية سوداء لكي يغطي ما خلفه */
     transition: all 0.3s ease;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
 }
 
 .ig-frame:hover {
     background: #0f0;
     color: #000;
-    box-shadow: 0 0 20px #0f0;
-    transform: scale(1.05);
+    box-shadow: 0 0 15px #0f0;
+    transform: translateY(-2px); /* حركة بسيطة للأعلى عند اللمس */
     cursor: pointer;
 }
