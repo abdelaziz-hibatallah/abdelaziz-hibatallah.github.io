@@ -3,52 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The EGO AI | المنصة الوطنية للضرائب 2026</title>
-    <meta name="description" content="منصة ذكية لحساب الضرائب والاستشارات القانونية في المغرب لعام 2026">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>The EGO TaxTech | المنصة الوطنية الذكية 2026</title>
+    
+    <meta name="description" content="منصة حساب الضرائب في المغرب لعام 2026 بالتصميم المغربي الأصيل والذكاء الاصطناعي">
+    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f4f7f6; }
-        .moroccan-header { background: linear-gradient(135deg, #006233 0%, #004d29 100%); border-bottom: 5px solid #c19b6c; }
-        .card-morocco { border-top: 4px solid #c19b6c; transition: transform 0.3s ease; }
-        h1, h2 { font-family: 'Amiri', serif; }
+        /* التنسيق المغربي التقليدي المدمج (Morocco Style) */
+        :root {
+            --royal-green: #006233;
+            --maghreb-gold: #c19b6c;
+            --marble-white: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--marble-white);
+            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+            scroll-behavior: smooth;
+        }
+
+        .moroccan-header {
+            background: linear-gradient(135deg, var(--royal-green) 0%, #004d29 100%) !important;
+            border-bottom: 6px solid var(--maghreb-gold);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .font-amiri { font-family: 'Amiri', serif; }
+
+        /* الكروت بتصميم الأقواس وزخرفة الزليج */
+        .card-zellige {
+            background: white !important;
+            border-top: 6px solid var(--maghreb-gold) !important;
+            border-radius: 15px !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .card-zellige:hover { transform: translateY(-5px); }
+
+        /* الأزرار النحاسية */
+        .btn-copper {
+            background-color: var(--maghreb-gold) !important;
+            color: white !important;
+            border-radius: 50px !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+            border: 2px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 4px 15px rgba(193, 155, 108, 0.4) !important;
+        }
+
+        .btn-copper:hover {
+            background-color: var(--royal-green) !important;
+            box-shadow: 0 6px 20px rgba(0, 98, 51, 0.3) !important;
+        }
+
+        /* حاوية الدردشة الليلية الفخمة */
+        #chatBox {
+            background: #0f172a !important;
+            border: 2px solid var(--maghreb-gold) !important;
+            border-radius: 20px !important;
+            padding: 20px !important;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* تخصيص الحقول */
+        input, select {
+            border-right: 5px solid var(--maghreb-gold) !important;
+            border-radius: 8px !important;
+            background-color: #fff !important;
+        }
+
+        .star-decoration {
+            color: var(--maghreb-gold);
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
-    <nav class="moroccan-header p-4 text-white shadow-2xl">
+
+    <nav class="moroccan-header p-5 text-white sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold uppercase">The EGO TaxTech 2026</h1>
-            <div class="space-x-4 space-x-reverse hidden md:flex">
-                <button onclick="showPage('company')" class="hover:text-yellow-500">الشركات</button>
-                <button onclick="showPage('merchant')" class="hover:text-yellow-500">التجار</button>
-                <button onclick="showPage('employee')" class="hover:text-yellow-500">الموظفين</button>
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">۞</span>
+                <h1 class="text-2xl font-bold font-amiri tracking-wider">THE EGO <span class="text-yellow-500">TAXTECH</span></h1>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <button onclick="showPage('company')" class="hover:text-yellow-400 transition">المقاولات</button>
+                <button onclick="showPage('merchant')" class="hover:text-yellow-400 transition">التجار</button>
+                <button onclick="showPage('employee')" class="hover:text-yellow-400 transition">الموظفين</button>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto mt-10 p-6">
-        <section id="company-page" class="page-content">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-2xl shadow-lg card-morocco">
-                    <h3 class="font-bold mb-4 italic text-green-800">حساب الضريبة على الشركات (IS)</h3>
-                    <input type="number" id="profit" placeholder="الربح السنوي الصافي" class="w-full p-3 bg-gray-100 rounded mb-4 outline-none">
-                    <button id="calcISBtn" class="w-full bg-green-800 text-white py-2 rounded">احسب الضريبة</button>
-                    <p id="resIS" class="mt-4 font-bold"></p>
-                </div>
-                <div class="md:col-span-2 bg-slate-900 text-white p-6 rounded-2xl h-[400px] flex flex-col">
-                    <div id="chatBox" class="flex-grow overflow-y-auto mb-4 text-sm">
-                        <p class="text-blue-400 font-bold italic underline mb-4 inline-block">مستشار Gemini القانوني لعام 2026 في خدمتك...</p>
+    <header class="py-12 text-center">
+        <h2 class="text-4xl font-bold text-green-900 font-amiri mb-2 italic">خدمات الضريبة لمدينة مكناس الذكية</h2>
+        <div class="w-24 h-1 bg-yellow-600 mx-auto rounded-full"></div>
+    </header>
+
+    <main class="container mx-auto px-6 grid lg:grid-cols-3 gap-10">
+        
+        <div class="lg:col-span-1 space-y-8">
+            <div class="card-zellige p-8">
+                <h3 class="text-xl font-bold text-green-800 mb-6 flex items-center gap-2">
+                    <span>📊</span> محاكي الربح والضريبة
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 block mb-1">الدخل السنوي (MAD)</label>
+                        <input type="number" id="income" class="w-full p-3 bg-gray-50 border-none outline-none focus:ring-1 focus:ring-green-500" placeholder="0.00">
                     </div>
+                    <button onclick="calculateLocal()" class="w-full btn-copper py-4">تحليل الحسابات</button>
+                    <div id="localResult" class="hidden mt-4 p-4 bg-green-50 rounded-lg text-green-800 font-bold text-center border border-green-100"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col h-[600px] overflow-hidden border-t-8 border-green-800">
+                <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                    <span class="font-bold text-green-900 flex items-center gap-2">
+                        <span class="text-yellow-600">۞</span> مستشار قانون مالية 2026
+                    </span>
+                    <span class="text-xs text-gray-400 italic">مشفر وآمن</span>
+                </div>
+                
+                <div id="chatBox" class="flex-grow overflow-y-auto space-y-4 scrollbar-hide text-white">
+                    <div class="text-blue-300 text-sm italic">مرحباً بك في فضاء The EGO. أنا مساعدك الذكي المرتبط بقوانين المغرب الجديدة. كيف أساعدك اليوم؟</div>
+                </div>
+
+                <div class="p-4 bg-white border-t">
                     <div class="flex gap-2">
-                        <input type="text" id="aiInput" class="flex-grow p-3 bg-gray-800 rounded outline-none border border-gray-700" placeholder="اسأل عن قانون المالية...">
-                        <button id="sendAI" class="bg-[#c19b6c] px-6 rounded font-bold">ارسل</button>
+                        <input type="text" id="aiInput" class="flex-grow p-4 bg-gray-100 rounded-full border-none outline-none text-sm" placeholder="اسأل عن إعفاءات المقاولات الناشئة...">
+                        <button id="sendAI" class="bg-green-800 text-white p-4 rounded-full hover:bg-black transition">
+                            <svg class="w-5 h-5 rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </main>
 
-        </main>
+    <footer class="mt-20 p-8 text-center text-gray-400 border-t bg-white">
+        <p class="font-amiri tracking-widest uppercase">The EGO Project - Smart City Meknes 2026</p>
+    </footer>
 
-    <script type="module" src="main.js"></script>
+    <script type="module">
+        // كود الربط الذي قمت بتزويدي به سابقاً
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0E4YmwONbnFdVUGErQjjqO2onIUkfGI8",
+            authDomain: "the-ego-taxtech.firebaseapp.com",
+            projectId: "the-ego-taxtech",
+            appId: "1:42792102209:web:e27de237be4c9eca5399c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const functions = getFunctions(app);
+        const askTheEgoAI = httpsCallable(functions, 'askTheEgo');
+
+        window.calculateLocal = function() {
+            const inc = document.getElementById('income').value;
+            if(!inc) return;
+            let tax = inc > 40000 ? (inc * 0.15) : 0; 
+            const res = document.getElementById('localResult');
+            res.innerText = `الضريبة التقديرية: ${tax.toLocaleString()} درهم`;
+            res.classList.remove('hidden');
+        };
+
+        document.getElementById('sendAI').onclick = async function() {
+            const text = document.getElementById('aiInput').value;
+            const chat = document.getElementById('chatBox');
+            if(!text) return;
+
+            chat.innerHTML += `<div class="text-yellow-500 text-right font-bold">أنت: ${text}</div>`;
+            document.getElementById('aiInput').value = "";
+            
+            const loading = document.createElement('div');
+            loading.innerText = "جاري استشارة الذكاء الاصطناعي...";
+            loading.className = "italic text-gray-500 text-xs animate-pulse";
+            chat.appendChild(loading);
+            chat.scrollTop = chat.scrollHeight;
+
+            try {
+                const result = await askTheEgoAI({ text: text });
+                loading.remove();
+                chat.innerHTML += `<div class="bg-green-900/50 p-4 rounded-xl border-r-4 border-yellow-600 text-white leading-relaxed">
+                    <strong class="text-yellow-500 block mb-1">The EGO AI:</strong>${result.data.answer}
+                </div>`;
+            } catch (e) {
+                loading.innerText = "⚠️ خطأ: تأكد من تفعيل خطة Blaze في Firebase.";
+            }
+            chat.scrollTop = chat.scrollHeight;
+        };
+    </script>
 </body>
 </html>
