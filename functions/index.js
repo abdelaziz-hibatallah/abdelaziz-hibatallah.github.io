@@ -1,17 +1,20 @@
 const functions = require("firebase-functions");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI(functions.config().gemini.key);
+// ضع مفتاح الـ API هنا (سيكون مخفياً في سيرفرات جوجل)
+const genAI = new GoogleGenerativeAI("ضـع_مـفـتـاح_GEMINI_هـنـا");
 
-exports.askTaxConsultant = functions.https.onCall(async (data, context) => {
-    // التأكد من أن المستخدم مسجل دخول (أمان إضافي)
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'يجب تسجيل الدخول أولاً');
-    }
+exports.askTheEgo = functions.https.onCall(async (data, context) => {
+    // الأمان: التأكد من الطلب
+    if (!data.text) return { answer: "الرجاء كتابة سؤال." };
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const prompt = `بصفتك خبير ضرائب مغربي، حلل الآتي بناءً على قانون 2026: ${data.text}`;
+    const systemInstruction = "أنت خبير ضرائب مغربي لعام 2026. أجب بدقة قانونية واختصار.";
 
-    const result = await model.generateContent(prompt);
-    return { answer: result.response.text() };
+    try {
+        const result = await model.generateContent([systemInstruction, data.text]);
+        return { answer: result.response.text() };
+    } catch (error) {
+        return { answer: "عذراً، الخادم الضريبي مشغول حالياً." };
+    }
 });
