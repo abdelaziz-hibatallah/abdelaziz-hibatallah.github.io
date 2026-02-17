@@ -1,115 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="description" content="The Ego - Secure, Anonymous, Spy-Free Chat. Created by HIBAT ALLAH Abdelaziz.">
-    <meta name="author" content="HIBAT ALLAH Abdelaziz">
-    <meta name="google-site-verification" content="2hsb7JAuJkyuUrMGZU-Vr2cNw2UMcvoq_MhrbZIsoKk" />
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "The Ego",
-      "url": "https://theego.me", 
-      "description": "Secure, Anonymous, Spy-Free Chat system.",
-      "author": {
-        "@type": "Person",
-        "name": "HIBAT ALLAH Abdelaziz",
-        "url": "https://www.linkedin.com/in/abdelaziz-hibat-allah/",
-        "sameAs": [
-            "https://www.instagram.com/h_ika_b",
-            "https://github.com/abdelaziz-hibatallah",
-            "https://www.linkedin.com/in/abdelaziz-hibat-allah/"
-        ],
-        "jobTitle": "Web Developer",
-        "nationality": "Moroccan"
-      }
-    }
-    </script>
-    
-    <title>THE EGO | Spy-Free Zone</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <title>The EGO AI | المنصة الوطنية للخدمات الضريبية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: #f8fafc; }
+        .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .gradient-border { border-image: linear-gradient(to right, #2563eb, #0891b2) 1; }
+    </style>
 </head>
-<body>
-    <canvas id="matrix"></canvas>
+<body class="text-slate-900">
 
-    <div class="container">
-        
-        <div id="lang-screen">
-            <h1>THE EGO</h1>
-            <p class="mystery-text">"SHADOWS WHISPER, BUT NO ONE RECORDS"</p>
-            
-            <div class="lang-buttons">
-                <button onclick="setLanguage('en')">English [EN]</button>
-                <button onclick="setLanguage('fr')">Français [FR]</button>
-                <button onclick="setLanguage('ar')">العربية [AR]</button>
+    <nav class="sticky top-0 z-50 glass-effect border-b border-slate-200 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-blue-200">E</div>
+                <h1 class="text-xl font-bold tracking-tight text-blue-900">THE EGO <span class="text-blue-500 text-sm">PRO</span></h1>
             </div>
-            
-            <div class="social-container">
-                <a href="https://instagram.com/h_ika_b" target="_blank" class="ig-frame">
-                     CONNECT: @h_ika_b 
-                </a>
+            <div class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
+                <a href="#" class="hover:text-blue-600 transition">القانون المالي 2026</a>
+                <a href="#" class="hover:text-blue-600 transition">الدليل الضريبي</a>
+                <a href="#" class="hover:text-blue-600 transition">الدعم التقني</a>
             </div>
-            
-            <div class="credit-footer">Dev by: Abdelazize HIBAT ALLAH</div>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition shadow-md shadow-blue-100">تسجيل الدخول الآمن</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto max-w-6xl mt-12 px-4 pb-20">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-extrabold text-slate-800 mb-4 leading-tight">حساباتك الضريبية بذكاء <span class="text-blue-600">قانون 2026</span></h2>
+            <p class="text-slate-500 max-w-2xl mx-auto italic">نظام آمن ومشفر يعتمد على Google Gemini لتبسيط الالتزامات الجبائية للمواطنين والشركات.</p>
         </div>
 
-        <div id="login-screen" class="hidden">
-            <h1 id="lbl-title">THE EGO</h1>
-            <p id="lbl-subtitle" class="subtitle">IDENTITY VERIFICATION</p>
-            
-            <div class="input-group">
-                <input type="text" id="username" placeholder="Username" autocomplete="off">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    المحاكي المالي
+                </h3>
+                <div class="space-y-5">
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">الدخل السنوي (MAD)</label>
+                        <input type="number" id="income" class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 transition outline-none" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">الحالة العائلية</label>
+                        <select id="deductions" class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none">
+                            <option value="0">أعزب</option>
+                            <option value="360">متزوج</option>
+                            <option value="720">متزوج + طفل</option>
+                        </select>
+                    </div>
+                    <div id="resultDisplay" class="hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <p class="text-sm text-blue-800 font-medium text-center">الضريبة التقديرية: <span id="taxValue" class="text-xl font-bold">0</span> درهم</p>
+                    </div>
+                    <button onclick="calculateIR()" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:shadow-lg transition transform hover:-translate-y-0.5">احسب النتائج</button>
+                </div>
             </div>
 
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Password" maxlength="10" autocomplete="off">
+            <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden h-[600px]">
+                <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+                    <span class="flex items-center gap-2 text-sm font-bold text-slate-700">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        المستشار القانوني (مشفر بـ AES-256)
+                    </span>
+                    <button class="text-slate-400 hover:text-red-500 transition text-xs">مسح المحادثة</button>
+                </div>
+                
+                <div id="chatContainer" class="flex-grow p-6 overflow-y-auto space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5">
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%] p-4 bg-blue-600 text-white rounded-2xl rounded-tr-none shadow-md text-sm leading-relaxed">
+                            مرحباً بك في نظام "The EGO" للمدينة الذكية. أنا مساعدك الرقمي المرتبط بقواعد بيانات وزارة المالية 2026. كيف يمكنني مساعدتك في شؤونك الضريبية اليوم؟
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t">
+                    <div class="relative flex items-center">
+                        <input type="text" id="userQuery" class="w-full p-4 pr-12 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 outline-none text-sm" placeholder="اسأل عن إعفاءات السكن، الضريبة على الدخل...">
+                        <button onclick="sendToGemini()" class="absolute left-2 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition">
+                            <svg class="w-5 h-5 rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-            <div class="input-group">
-                <input type="number" id="room-code" placeholder="Room ID" autocomplete="off">
-            </div>
-            
-            <button onclick="handleAuth()" id="btn-enter">ACCESS SYSTEM 🔒</button>
-            <p id="error-msg" class="error-text"></p>
-            
-            <p class="security-notice">
-                Secure chat with encryption and location tracking for security analysis.<br>
-                Created by HIBAT ALLAH Abdelaziz
-            </p>
         </div>
+    </main>
 
-        <div id="admin-screen" class="hidden">
-            <div class="chat-header">
-                <span style="color:red; font-weight:bold;">GOD MODE 👁️</span>
-                <button onclick="logout()" class="exit-btn">LOGOUT</button>
-            </div>
-            <div id="active-rooms-list">
-                <p style="text-align:center; color:#555;">Scanning network...</p>
-            </div>
-        </div>
-
-        <div id="chat-screen" class="hidden">
-            <div class="chat-header">
-                <span id="room-display">Room: ...</span>
-                <button onclick="logout()" class="exit-btn">LOGOUT</button>
-            </div>
-            <div id="messages-list"></div>
-            <div class="input-area">
-                <button id="btn-mic" onclick="toggleRecording()">🎙️</button>
-                <input type="text" id="message-input" placeholder="..." autocomplete="off">
-                <button onclick="sendMessage()" id="btn-send">➤</button>
-            </div>
-            <div id="recording-status" class="hidden">Recording...</div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
