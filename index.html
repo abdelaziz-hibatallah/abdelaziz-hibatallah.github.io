@@ -3,93 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The EGO AI | المنصة الوطنية للخدمات الضريبية</title>
+    
+    <title>The EGO AI | حاسبة الضريبة ومستشار قانون المالية 2026 المغرب</title>
+    <meta name="description" content="المنصة الأولى في المغرب لحساب الضريبة على الدخل (IR) والشركات بناءً على مستجدات قانون مالية 2026 باستخدام الذكاء الاصطناعي Gemini.">
+    <meta name="keywords" content="قانون المالية 2026, الضريبة على الدخل المغرب, محاسبة, ذكاء اصطناعي, Tax Maroc, Fiscalité 2026">
+    <meta name="author" content="The EGO Team">
+    
+    <meta property="og:title" content="The EGO AI - مستشارك الضريبي الرقمي">
+    <meta property="og:description" content="احسب ضريبتك واحصل على استشارة قانونية فورية ومجانية.">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: #f8fafc; }
-        .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        .gradient-border { border-image: linear-gradient(to right, #2563eb, #0891b2) 1; }
+        body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .hero-gradient { background: radial-gradient(circle at top right, #1e40af, #030712); }
     </style>
 </head>
-<body class="text-slate-900">
+<body class="bg-slate-50 text-slate-900">
 
-    <nav class="sticky top-0 z-50 glass-effect border-b border-slate-200 p-4">
-        <div class="container mx-auto flex justify-between items-center">
+    <header class="glass sticky top-0 z-50 border-b border-slate-200 py-3 shadow-sm">
+        <nav class="container mx-auto px-6 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-blue-200">E</div>
-                <h1 class="text-xl font-bold tracking-tight text-blue-900">THE EGO <span class="text-blue-500 text-sm">PRO</span></h1>
+                <span class="text-3xl">🛡️</span>
+                <h1 class="text-2xl font-bold text-blue-900 tracking-tighter">THE EGO <span class="text-blue-500">AI</span></h1>
             </div>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-                <a href="#" class="hover:text-blue-600 transition">القانون المالي 2026</a>
-                <a href="#" class="hover:text-blue-600 transition">الدليل الضريبي</a>
-                <a href="#" class="hover:text-blue-600 transition">الدعم التقني</a>
+            <div class="hidden md:flex gap-8 font-medium">
+                <a href="#calculator" class="hover:text-blue-600 transition">الحاسبة الذكية</a>
+                <a href="#consultant" class="hover:text-blue-600 transition">مستشار 2026</a>
+                <a href="#" class="text-red-500 font-bold">مباشر: قانون المالية</a>
             </div>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition shadow-md shadow-blue-100">تسجيل الدخول الآمن</button>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <main class="container mx-auto max-w-6xl mt-12 px-4 pb-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold text-slate-800 mb-4 leading-tight">حساباتك الضريبية بذكاء <span class="text-blue-600">قانون 2026</span></h2>
-            <p class="text-slate-500 max-w-2xl mx-auto italic">نظام آمن ومشفر يعتمد على Google Gemini لتبسيط الالتزامات الجبائية للمواطنين والشركات.</p>
-        </div>
+    <main>
+        <section class="hero-gradient text-white py-20 px-6">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl md:text-6xl font-bold mb-6">مستقبل الضرائب في المغرب بين يديك</h2>
+                <p class="text-blue-200 text-xl max-w-2xl mx-auto mb-10">منصة ذكية مخصصة للمواطنين والشركات لتحليل الوضعية الجبائية وفق أحدث معايير قانون مالية 2026.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="#calculator" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-full font-bold transition">ابدأ الحساب الآن</a>
+                </div>
+            </div>
+        </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-1 bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
-                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    المحاكي المالي
+        <section id="calculator" class="container mx-auto py-20 px-6 grid lg:grid-cols-2 gap-12">
+            
+            <article class="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-900">
+                    <span class="p-2 bg-blue-100 rounded-lg">📊</span> محاكي الضريبة على الدخل
                 </h3>
-                <div class="space-y-5">
+                <div class="space-y-6">
                     <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">الدخل السنوي (MAD)</label>
-                        <input type="number" id="income" class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 transition outline-none" placeholder="0.00">
+                        <label class="block text-sm font-bold text-slate-500 mb-2">الدخل السنوي الإجمالي (درهم)</label>
+                        <input type="number" id="incomeInput" class="w-full p-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="مثال: 120000">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">الحالة العائلية</label>
-                        <select id="deductions" class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none">
-                            <option value="0">أعزب</option>
-                            <option value="360">متزوج</option>
-                            <option value="720">متزوج + طفل</option>
-                        </select>
+                        <label class="block text-sm font-bold text-slate-500 mb-2">عدد الأطفال (للخصم الضريبي)</label>
+                        <input type="number" id="kidsInput" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" placeholder="0">
                     </div>
-                    <div id="resultDisplay" class="hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <p class="text-sm text-blue-800 font-medium text-center">الضريبة التقديرية: <span id="taxValue" class="text-xl font-bold">0</span> درهم</p>
+                    <div id="resultBox" class="hidden p-6 bg-green-50 rounded-2xl border border-green-100">
+                        <p class="text-green-800 font-bold text-center text-lg">الضريبة التقديرية: <span id="taxRes" class="text-3xl">0</span> درهم</p>
                     </div>
-                    <button onclick="calculateIR()" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:shadow-lg transition transform hover:-translate-y-0.5">احسب النتائج</button>
+                    <button onclick="runApp()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold hover:bg-black transition-all shadow-xl">تحليل وضعييتي القانونية</button>
                 </div>
-            </div>
+            </article>
 
-            <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden h-[600px]">
-                <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                    <span class="flex items-center gap-2 text-sm font-bold text-slate-700">
-                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        المستشار القانوني (مشفر بـ AES-256)
-                    </span>
-                    <button class="text-slate-400 hover:text-red-500 transition text-xs">مسح المحادثة</button>
-                </div>
-                
-                <div id="chatContainer" class="flex-grow p-6 overflow-y-auto space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5">
-                    <div class="flex justify-start">
-                        <div class="max-w-[80%] p-4 bg-blue-600 text-white rounded-2xl rounded-tr-none shadow-md text-sm leading-relaxed">
-                            مرحباً بك في نظام "The EGO" للمدينة الذكية. أنا مساعدك الرقمي المرتبط بقواعد بيانات وزارة المالية 2026. كيف يمكنني مساعدتك في شؤونك الضريبية اليوم؟
-                        </div>
+            <article id="consultant" class="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl flex flex-col h-[550px]">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="p-2 bg-blue-600 rounded-lg">🤖</span> مستشار Gemini 2026
+                </h3>
+                <div id="chatWindow" class="flex-grow overflow-y-auto space-y-4 mb-6 scrollbar-hide">
+                    <div class="bg-slate-800 p-4 rounded-2xl text-sm italic">
+                        أهلاً بك! أنا مدرب على نصوص قانون المالية 2026 المغربي. كيف أساعدك اليوم؟
                     </div>
                 </div>
+                <div class="flex gap-2">
+                    <input type="text" id="userMsg" class="flex-grow p-4 bg-slate-800 rounded-2xl outline-none border border-slate-700" placeholder="اسأل عن إعفاءات السكن...">
+                    <button onclick="askAI()" class="bg-blue-600 px-6 rounded-2xl hover:bg-blue-700 transition">🚀</button>
+                </div>
+            </article>
 
-                <div class="p-4 border-t">
-                    <div class="relative flex items-center">
-                        <input type="text" id="userQuery" class="w-full p-4 pr-12 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 outline-none text-sm" placeholder="اسأل عن إعفاءات السكن، الضريبة على الدخل...">
-                        <button onclick="sendToGemini()" class="absolute left-2 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition">
-                            <svg class="w-5 h-5 rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     </main>
 
-    <script src="app.js"></script>
+    <footer class="bg-white border-t border-slate-200 py-10 text-center text-slate-400 text-sm">
+        <p>&copy; 2026 The EGO AI - جميع الحقوق محفوظة لوزارة الابتكار الرقمي للمدينة الذكية</p>
+    </footer>
+
+    <script src="final-logic.js"></script>
 </body>
 </html>
