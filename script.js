@@ -1,43 +1,32 @@
-// معادلات الضريبة المغربية 2026
-function calculateTax(income, kids) {
-    let tax = 0;
-    // أشطر الضريبة (مثال تقريبي لقانون 2026)
-    if (income <= 40000) tax = 0;
-    else if (income <= 60000) tax = (income * 0.10) - 4000;
-    else if (income <= 80000) tax = (income * 0.20) - 10000;
-    else tax = (income * 0.38) - 32400;
-
-    // خصم الأعباء العائلية (360 درهم لكل طفل في السنة)
-    let deductions = kids * 360;
-    return Math.max(0, tax - deductions);
-}
-
-// دالة التشغيل الرئيسية
-async function runApp() {
-    const inc = document.getElementById('incomeInput').value;
-    const kids = document.getElementById('kidsInput').value;
+document.addEventListener('DOMContentLoaded', () => {
+    // نربط الأزرار بناءً على الـ ID الذي وضعناه سابقاً
+    const btnCompany = document.querySelector('button[onclick*="askAI"]'); 
     
-    if(!inc) return alert("الرجاء إدخال الدخل السنوي");
+    if (btnCompany) {
+        // نغير الوظيفة لتعمل مع Gemini الحقيقي
+        btnCompany.onclick = async function() {
+            const userInput = document.getElementById('msg-company').value;
+            const chatBox = document.getElementById('chat-company');
 
-    const finalTax = calculateTax(inc, kids);
-    document.getElementById('taxRes').innerText = finalTax.toLocaleString();
-    document.getElementById('resultBox').classList.remove('hidden');
-    
-    // إرسال البيانات تلقائياً للمستشار لتحليلها
-    askAI(`دخل السنوي هو ${inc} درهم وعندي ${kids} أطفال، حلل وضعي ضريبياً.`);
-}
+            if(!userInput) return;
 
-// الربط مع Gemini عبر Backend آمن (سنتطرق له في Firebase)
-async function askAI(directPrompt = null) {
-    const userMsg = directPrompt || document.getElementById('userMsg').value;
-    const chatWindow = document.getElementById('chatWindow');
+            // 1. إضافة سؤال المستخدم للشاشة
+            chatBox.innerHTML += `<div class="text-yellow-500 mt-2">أنت: ${userInput}</div>`;
+            chatBox.innerHTML += `<div id="loading" class="text-white italic animate-pulse">جاري استشارة قانون مالية 2026...</div>`;
 
-    if(!userMsg) return;
-
-    chatWindow.innerHTML += `<div class="bg-blue-600 self-end p-3 rounded-2xl ml-10 text-right">${userMsg}</div>`;
-    
-    // هنا سيتم الربط مع Firebase Functions لاحقاً
-    chatWindow.innerHTML += `<div class="bg-slate-800 p-3 rounded-2xl mr-10 animate-pulse">جاري تحليل بيانات قانون مالية 2026...</div>`;
-    
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+            try {
+                // 2. استدعاء Gemini عبر Firebase Cloud Functions
+                const result = await askGeminiAI({ text: userInput });
+                
+                // 3. عرض الرد
+                document.getElementById('loading').remove();
+                chatBox.innerHTML += `<div class="text-green-400 mt-2 font-bold">The EGO AI:</div>`;
+                chatBox.innerHTML += `<div class="text-gray-200 bg-gray-800 p-3 rounded-lg">${result.data.answer}</div>`;
+                
+            } catch (error) {
+                document.getElementById('loading').innerText = "خطأ: تأكد من تسجيل الدخول وتفعيل خدمة Gemini.";
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+    }
+});
