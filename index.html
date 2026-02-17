@@ -4,85 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The EGO TaxTech | المنصة الوطنية الذكية 2026</title>
-    
-    <meta name="description" content="منصة حساب الضرائب في المغرب لعام 2026 بالتصميم المغربي الأصيل والذكاء الاصطناعي">
-    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* التنسيق المغربي التقليدي المدمج (Morocco Style) */
-        :root {
-            --royal-green: #006233;
-            --maghreb-gold: #c19b6c;
-            --marble-white: #f4f7f6;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--marble-white);
-            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
-            scroll-behavior: smooth;
-        }
-
-        .moroccan-header {
-            background: linear-gradient(135deg, var(--royal-green) 0%, #004d29 100%) !important;
-            border-bottom: 6px solid var(--maghreb-gold);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .font-amiri { font-family: 'Amiri', serif; }
-
-        /* الكروت بتصميم الأقواس وزخرفة الزليج */
-        .card-zellige {
-            background: white !important;
-            border-top: 6px solid var(--maghreb-gold) !important;
-            border-radius: 15px !important;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .card-zellige:hover { transform: translateY(-5px); }
-
-        /* الأزرار النحاسية */
-        .btn-copper {
-            background-color: var(--maghreb-gold) !important;
-            color: white !important;
-            border-radius: 50px !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            border: 2px solid rgba(255,255,255,0.1) !important;
-            box-shadow: 0 4px 15px rgba(193, 155, 108, 0.4) !important;
-        }
-
-        .btn-copper:hover {
-            background-color: var(--royal-green) !important;
-            box-shadow: 0 6px 20px rgba(0, 98, 51, 0.3) !important;
-        }
-
-        /* حاوية الدردشة الليلية الفخمة */
-        #chatBox {
-            background: #0f172a !important;
-            border: 2px solid var(--maghreb-gold) !important;
-            border-radius: 20px !important;
-            padding: 20px !important;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        /* تخصيص الحقول */
-        input, select {
-            border-right: 5px solid var(--maghreb-gold) !important;
-            border-radius: 8px !important;
-            background-color: #fff !important;
-        }
-
-        .star-decoration {
-            color: var(--maghreb-gold);
-            font-size: 1.5rem;
-            opacity: 0.6;
-        }
+        :root { --royal-green: #006233; --maghreb-gold: #c19b6c; --marble-white: #f4f7f6; }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--marble-white); background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); }
+        .moroccan-header { background: linear-gradient(135deg, var(--royal-green) 0%, #004d29 100%) !important; border-bottom: 6px solid var(--maghreb-gold); }
+        .card-zellige { background: white !important; border-top: 6px solid var(--maghreb-gold) !important; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .btn-copper { background-color: var(--maghreb-gold) !important; color: white !important; border-radius: 50px; font-weight: bold; transition: 0.3s; }
+        .btn-copper:hover { background-color: var(--royal-green) !important; transform: scale(1.02); }
+        .page-content { display: none; }
+        .active-page { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        input { border-right: 4px solid var(--maghreb-gold) !important; padding: 10px; background: #f9f9f9; width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .law-box { background: #fffbeb; border-right: 4px solid #d97706; padding: 15px; font-size: 0.9rem; color: #92400e; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -91,70 +27,70 @@
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <span class="text-3xl">۞</span>
-                <h1 class="text-2xl font-bold font-amiri tracking-wider">THE EGO <span class="text-yellow-500">TAXTECH</span></h1>
+                <h1 class="text-2xl font-bold font-amiri">THE EGO <span class="text-yellow-500">TAXTECH</span></h1>
             </div>
-            <div class="hidden md:flex gap-8 text-sm font-medium">
-                <button onclick="showPage('company')" class="hover:text-yellow-400 transition">المقاولات</button>
-                <button onclick="showPage('merchant')" class="hover:text-yellow-400 transition">التجار</button>
-                <button onclick="showPage('employee')" class="hover:text-yellow-400 transition">الموظفين</button>
+            <div class="flex gap-4 md:gap-8 text-sm font-medium">
+                <button onclick="showPage('company')" class="hover:text-yellow-400">المقاولات</button>
+                <button onclick="showPage('merchant')" class="hover:text-yellow-400">التجار</button>
+                <button onclick="showPage('employee')" class="hover:text-yellow-400">الموظفين</button>
             </div>
         </div>
     </nav>
 
-    <header class="py-12 text-center">
-        <h2 class="text-4xl font-bold text-green-900 font-amiri mb-2 italic">خدمات الضريبة لمدينة مكناس الذكية</h2>
-        <div class="w-24 h-1 bg-yellow-600 mx-auto rounded-full"></div>
-    </header>
-
-    <main class="container mx-auto px-6 grid lg:grid-cols-3 gap-10">
+    <div class="container mx-auto px-6 py-10">
         
-        <div class="lg:col-span-1 space-y-8">
-            <div class="card-zellige p-8">
-                <h3 class="text-xl font-bold text-green-800 mb-6 flex items-center gap-2">
-                    <span>📊</span> محاكي الربح والضريبة
-                </h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-xs font-bold text-gray-400 block mb-1">الدخل السنوي (MAD)</label>
-                        <input type="number" id="income" class="w-full p-3 bg-gray-50 border-none outline-none focus:ring-1 focus:ring-green-500" placeholder="0.00">
-                    </div>
-                    <button onclick="calculateLocal()" class="w-full btn-copper py-4">تحليل الحسابات</button>
-                    <div id="localResult" class="hidden mt-4 p-4 bg-green-50 rounded-lg text-green-800 font-bold text-center border border-green-100"></div>
+        <div id="company" class="page-content active-page">
+            <h2 class="text-3xl font-bold text-green-900 mb-6">فضاء الشركات والمقاولات</h2>
+            <div class="law-box">
+                <strong>نص قانوني:</strong> تخضع الشركات (SARL) لضريبة الشركات (IS) حسب السعر التصاعدي المنصوص عليه في المادة 19 من المدونة العامة للضرائب لعام 2026.
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card-zellige p-6">
+                    <h3 class="font-bold mb-4">التحليل المالي والضريبي</h3>
+                    <input type="text" placeholder="رقم التعريف الموحد للمقاولة (ICE)">
+                    <input type="number" id="comp_revenue" placeholder="إجمالي المداخيل (درهم)">
+                    <input type="number" id="comp_expenses" placeholder="إجمالي المصاريف (درهم)">
+                    <button onclick="analyzeEconomy('comp')" class="btn-copper w-full py-3 mt-2">تقديم الوضع الاقتصادي</button>
+                    <div id="comp_result" class="mt-4 p-4 rounded hidden"></div>
+                </div>
+                <div class="card-zellige p-6">
+                    <h3 class="font-bold mb-4">استشارة خبير AI</h3>
+                    <div id="chatBoxComp" class="h-48 bg-gray-900 text-white p-4 rounded-xl overflow-y-auto mb-4 text-xs">اسأل عن ضريبة الشركات...</div>
+                    <input type="text" id="aiInputComp" placeholder="اكتب سؤالك هنا...">
+                    <button onclick="askAI('Comp')" class="btn-copper w-full py-2">إرسال</button>
                 </div>
             </div>
         </div>
 
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col h-[600px] overflow-hidden border-t-8 border-green-800">
-                <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
-                    <span class="font-bold text-green-900 flex items-center gap-2">
-                        <span class="text-yellow-600">۞</span> مستشار قانون مالية 2026
-                    </span>
-                    <span class="text-xs text-gray-400 italic">مشفر وآمن</span>
-                </div>
-                
-                <div id="chatBox" class="flex-grow overflow-y-auto space-y-4 scrollbar-hide text-white">
-                    <div class="text-blue-300 text-sm italic">مرحباً بك في فضاء The EGO. أنا مساعدك الذكي المرتبط بقوانين المغرب الجديدة. كيف أساعدك اليوم؟</div>
-                </div>
-
-                <div class="p-4 bg-white border-t">
-                    <div class="flex gap-2">
-                        <input type="text" id="aiInput" class="flex-grow p-4 bg-gray-100 rounded-full border-none outline-none text-sm" placeholder="اسأل عن إعفاءات المقاولات الناشئة...">
-                        <button id="sendAI" class="bg-green-800 text-white p-4 rounded-full hover:bg-black transition">
-                            <svg class="w-5 h-5 rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                        </button>
-                    </div>
-                </div>
+        <div id="merchant" class="page-content">
+            <h2 class="text-3xl font-bold text-green-900 mb-6">فضاء التجار والمقاول الذاتي</h2>
+            <div class="law-box">
+                <strong>نص قانوني:</strong> المادة 42 مكرر: يخضع المقاول الذاتي لضريبة مخفضة (0.5% للأنشطة التجارية و1% للخدمات) بشرط عدم تجاوز سقف المداخيل القانوني.
+            </div>
+            <div class="card-zellige p-8 max-w-2xl mx-auto">
+                <h3 class="font-bold mb-4 text-center">حاسبة المساهمة المهنية الموحدة (CPU)</h3>
+                <input type="number" id="merch_revenue" placeholder="رقم المعاملات السنوي (درهم)">
+                <button onclick="analyzeEconomy('merch')" class="btn-copper w-full py-4 mt-2">حساب الضريبة والوضع المالي</button>
+                <div id="merch_result" class="mt-4 p-4 rounded hidden text-center"></div>
             </div>
         </div>
-    </main>
 
-    <footer class="mt-20 p-8 text-center text-gray-400 border-t bg-white">
-        <p class="font-amiri tracking-widest uppercase">The EGO Project - Smart City Meknes 2026</p>
-    </footer>
+        <div id="employee" class="page-content">
+            <h2 class="text-3xl font-bold text-green-900 mb-6">فضاء الأجراء والموظفين</h2>
+            <div class="law-box">
+                <strong>نص قانوني:</strong> حسب تعديلات قانون مالية 2025/2026، تم رفع سقف الإعفاء من الضريبة على الدخل (IR) لتخفيف العبء عن الأجراء ذوي الدخل المحدود.
+            </div>
+            <div class="card-zellige p-8 max-w-2xl mx-auto">
+                <h3 class="font-bold mb-4 text-center">حساب الضريبة على الدخل (IR)</h3>
+                <input type="number" id="emp_salary" placeholder="الراتب الشهري الصافي (درهم)">
+                <button onclick="analyzeEconomy('emp')" class="btn-copper w-full py-4 mt-2">تحليل الراتب</button>
+                <div id="emp_result" class="mt-4 p-4 rounded hidden text-center"></div>
+            </div>
+        </div>
+
+    </div>
 
     <script type="module">
-        // كود الربط الذي قمت بتزويدي به سابقاً
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
@@ -164,45 +100,60 @@
             projectId: "the-ego-taxtech",
             appId: "1:42792102209:web:e27de237be4c9eca5399c0"
         };
-
         const app = initializeApp(firebaseConfig);
         const functions = getFunctions(app);
         const askTheEgoAI = httpsCallable(functions, 'askTheEgo');
 
-        window.calculateLocal = function() {
-            const inc = document.getElementById('income').value;
-            if(!inc) return;
-            let tax = inc > 40000 ? (inc * 0.15) : 0; 
-            const res = document.getElementById('localResult');
-            res.innerText = `الضريبة التقديرية: ${tax.toLocaleString()} درهم`;
+        // وظيفة الانتقال بين الصفحات
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
+        }
+
+        // تحليل الوضع الاقتصادي والحسابات
+        window.analyzeEconomy = function(type) {
+            let res = document.getElementById(type + '_result');
             res.classList.remove('hidden');
-        };
-
-        document.getElementById('sendAI').onclick = async function() {
-            const text = document.getElementById('aiInput').value;
-            const chat = document.getElementById('chatBox');
-            if(!text) return;
-
-            chat.innerHTML += `<div class="text-yellow-500 text-right font-bold">أنت: ${text}</div>`;
-            document.getElementById('aiInput').value = "";
             
-            const loading = document.createElement('div');
-            loading.innerText = "جاري استشارة الذكاء الاصطناعي...";
-            loading.className = "italic text-gray-500 text-xs animate-pulse";
-            chat.appendChild(loading);
-            chat.scrollTop = chat.scrollHeight;
+            if(type === 'comp') {
+                let rev = parseFloat(document.getElementById('comp_revenue').value) || 0;
+                let exp = parseFloat(document.getElementById('comp_expenses').value) || 0;
+                let profit = rev - exp;
+                let status = profit > 0 ? "إيجابي (ربح)" : "سلبي (خسارة)";
+                let tax = profit > 0 ? profit * 0.20 : 0; // افتراض نسبة 20%
+                res.className = profit > 0 ? "mt-4 p-4 bg-green-100 text-green-800 font-bold" : "mt-4 p-4 bg-red-100 text-red-800 font-bold";
+                res.innerHTML = `الوضع المالي: ${status} <br> الربح الصافي: ${profit} درهم <br> الضريبة المتوقعة (IS): ${tax} درهم`;
+            } else if (type === 'merch') {
+                let rev = parseFloat(document.getElementById('merch_revenue').value) || 0;
+                let tax = rev * 0.01; // افتراض 1%
+                res.className = "mt-4 p-4 bg-blue-100 text-blue-800 font-bold";
+                res.innerHTML = `المساهمة المهنية (CPU) التقريبية: ${tax} درهم سنوياً`;
+            } else if (type === 'emp') {
+                let sal = parseFloat(document.getElementById('emp_salary').value) || 0;
+                let tax = sal > 6000 ? (sal * 0.10) : 0;
+                res.className = "mt-4 p-4 bg-purple-100 text-purple-800 font-bold";
+                res.innerHTML = `الضريبة المقتطعة من المنبع (IR) التقريبية: ${tax} درهم شهرياً`;
+            }
+        }
+
+        // وظيفة سؤال الذكاء الاصطناعي
+        window.askAI = async function(suffix) {
+            const input = document.getElementById('aiInput' + suffix);
+            const box = document.getElementById('chatBox' + suffix);
+            if(!input.value) return;
+
+            box.innerHTML += `<div class="text-yellow-500 mt-2">أنت: ${input.value}</div>`;
+            const userMsg = input.value;
+            input.value = "";
 
             try {
-                const result = await askTheEgoAI({ text: text });
-                loading.remove();
-                chat.innerHTML += `<div class="bg-green-900/50 p-4 rounded-xl border-r-4 border-yellow-600 text-white leading-relaxed">
-                    <strong class="text-yellow-500 block mb-1">The EGO AI:</strong>${result.data.answer}
-                </div>`;
+                const result = await askTheEgoAI({ text: userMsg });
+                box.innerHTML += `<div class="text-green-400 mt-2">The EGO AI: ${result.data.answer}</div>`;
             } catch (e) {
-                loading.innerText = "⚠️ خطأ: تأكد من تفعيل خطة Blaze في Firebase.";
+                box.innerHTML += `<div class="text-red-500 mt-2">⚠️ خطأ في الاتصال بالسيرفر.</div>`;
             }
-            chat.scrollTop = chat.scrollHeight;
-        };
+            box.scrollTop = box.scrollHeight;
+        }
     </script>
 </body>
 </html>
