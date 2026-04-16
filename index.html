@@ -1,142 +1,242 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The EGO TaxTech | استشارة الخبير عبد العزيز</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Quiz : Traitement et Analyse des Données</title>
     <style>
-        :root { --royal-green: #006233; --maghreb-gold: #c19b6c; --marble-white: #f4f7f6; }
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--marble-white); background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); }
-        .moroccan-header { background: linear-gradient(135deg, var(--royal-green) 0%, #004d29 100%) !important; border-bottom: 6px solid var(--maghreb-gold); }
-        .card-zellige { background: white !important; border-top: 6px solid var(--maghreb-gold) !important; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 20px; }
-        .btn-copper { background-color: var(--maghreb-gold) !important; color: white !important; border-radius: 50px; font-weight: bold; transition: 0.3s; padding: 12px; width: 100%; }
-        input, select, textarea { border-right: 4px solid var(--maghreb-gold) !important; padding: 12px; background: #f9f9f9; width: 100%; border-radius: 8px; margin-bottom: 15px; outline: none; border: 1px solid #ddd; }
-        .page-content { display: none; }
-        .active-page { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .question-block { margin-bottom: 25px; padding: 15px; background: #fafafa; border-left: 4px solid #3498db; border-radius: 4px; }
+        p.question { font-weight: bold; margin-top: 0; }
+        label { display: block; margin-bottom: 8px; cursor: pointer; }
+        input[type="radio"] { margin-right: 10px; }
+        button { display: block; width: 100%; padding: 15px; background: #3498db; color: white; border: none; font-size: 18px; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #2980b9; }
     </style>
 </head>
 <body>
 
-    <nav class="moroccan-header p-5 text-white sticky top-0 z-50 shadow-xl">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold font-amiri tracking-widest">THE EGO <span class="text-yellow-500">TAX PRO</span></h1>
-            <div class="flex gap-4 md:gap-8 text-sm">
-                <button onclick="showPage('calculator')" class="hover:text-yellow-400">حاسبة الضريبة</button>
-                <button onclick="showPage('consultation')" class="hover:text-yellow-400">تواصل مع الخبير</button>
-            </div>
+<div class="container">
+    <h1>QCM Évaluation : Traitement des Données</h1>
+    <p><em>Contexte : Vous menez une étude sur les performances et habitudes des employés d'une grande coopérative (salaires, ancienneté, satisfaction). Répondez aux questions suivantes pour traiter vos données.</em></p>
+
+    <form id="dataQuiz">
+
+        <div class="question-block">
+            <p class="question">1. Le "Niveau de satisfaction" (Faible, Moyen, Élevé) recueilli par questionnaire est une variable :</p>
+            <label><input type="radio" name="q1" value="A"> A) Quantitative continue</label>
+            <label><input type="radio" name="q1" value="B"> B) Qualitative ordinale</label>
+            <label><input type="radio" name="q1" value="C"> C) Qualitative nominale</label>
         </div>
-    </nav>
 
-    <div class="container mx-auto px-6 py-10 max-w-5xl">
-        
-        <section id="calculator" class="page-content active-page">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-green-900 font-amiri italic">حاسبة الوضع الاقتصادي والضريبي</h2>
-                <p class="text-gray-500 mt-2">حلل مداخيلك ومصاريفك بناءً على معايير 2026</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="card-zellige">
-                    <h3 class="font-bold mb-4 text-green-800">📊 أدخل بياناتك المالية</h3>
-                    <input type="number" id="rev" placeholder="إجمالي المداخيل السنوية (درهم)">
-                    <input type="number" id="exp" placeholder="إجمالي المصاريف السنوية (درهم)">
-                    <button onclick="calculateTax()" class="btn-copper">تحليل فوري ۞</button>
-                </div>
-                <div id="calcRes" class="card-zellige flex flex-col justify-center items-center text-center bg-gray-50 border-dashed border-2 border-gray-200">
-                    <p class="text-gray-400 italic">أدخل البيانات لتظهر النتيجة هنا</p>
-                </div>
-            </div>
-        </section>
+        <div class="question-block">
+            <p class="question">2. Vous divisez les employés en cadres et ouvriers, puis vous tirez au sort dans chaque groupe proportionnellement. C'est un échantillonnage :</p>
+            <label><input type="radio" name="q2" value="A"> A) Aléatoire simple</label>
+            <label><input type="radio" name="q2" value="B"> B) Par quotas</label>
+            <label><input type="radio" name="q2" value="C"> C) Stratifié</label>
+        </div>
 
-        <section id="consultation" class="page-content">
-            <div class="card-zellige max-w-2xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6 text-center text-green-900">أرسل ملفك مباشرة للخبير عبد العزيز</h2>
-                <form id="contactForm">
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <input type="text" id="name" placeholder="اسمك الكامل" required>
-                        <input type="email" id="email" placeholder="بريدك الإلكتروني" required>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <select id="role">
-                            <option value="موظف">أنا موظف (أجير)</option>
-                            <option value="تاجر">أنا تاجر / مقاول ذاتي</option>
-                            <option value="شركة">أنا صاحب شركة (ICE مطلوب)</option>
-                        </select>
-                        <input type="text" id="ice" placeholder="رقم الـ ICE (إن وجد)">
-                    </div>
-                    <textarea id="message" rows="4" placeholder="اكتب استشارتك هنا... سيظهر لي اسم مؤسستك ووضعك الحالي." required></textarea>
-                    <button type="submit" class="btn-copper">إرسال لـ عبد العزيز ۞</button>
-                </form>
-                <div id="status" class="mt-4 text-center hidden font-bold"></div>
-            </div>
-        </section>
+        <div class="question-block">
+            <p class="question">3. "L'ancienneté en années complètes" (ex: 2 ans, 5 ans) est une variable :</p>
+            <label><input type="radio" name="q3" value="A"> A) Quantitative discrète</label>
+            <label><input type="radio" name="q3" value="B"> B) Quantitative continue</label>
+            <label><input type="radio" name="q3" value="C"> C) Qualitative</label>
+        </div>
 
-    </div>
+        <div class="question-block">
+            <p class="question">4. Les données récupérées directement depuis les fiches de paie préexistantes de l'entreprise sont des données :</p>
+            <label><input type="radio" name="q4" value="A"> A) Primaires</label>
+            <label><input type="radio" name="q4" value="B"> B) Secondaires</label>
+            <label><input type="radio" name="q4" value="C"> C) Tertiaires</label>
+        </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <div class="question-block">
+            <p class="question">5. Lequel de ces indicateurs n'est PAS un paramètre de dispersion ?</p>
+            <label><input type="radio" name="q5" value="A"> A) La variance</label>
+            <label><input type="radio" name="q5" value="B"> B) L'écart-type</label>
+            <label><input type="radio" name="q5" value="C"> C) Le Mode</label>
+        </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA0E4YmwONbnFdVUGErQjjqO2onIUkfGI8",
-            authDomain: "the-ego-taxtech.firebaseapp.com",
-            projectId: "the-ego-taxtech",
-            appId: "1:42792102209:web:e27de237be4c9eca5399c0"
-        };
+        <div class="question-block">
+            <p class="question">6. Le nombre de machines tombant en panne par jour est un événement rare. Il suit probablement une loi :</p>
+            <label><input type="radio" name="q6" value="A"> A) Normale</label>
+            <label><input type="radio" name="q6" value="B"> B) De Poisson</label>
+            <label><input type="radio" name="q6" value="C"> C) Binomiale</label>
+        </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        <div class="question-block">
+            <p class="question">7. Pour utiliser la table de la loi normale centrée réduite N(0,1), on utilise la formule de transformation Z = :</p>
+            <label><input type="radio" name="q7" value="A"> A) (X - écart-type) / moyenne</label>
+            <label><input type="radio" name="q7" value="B"> B) (X - moyenne) / variance</label>
+            <label><input type="radio" name="q7" value="C"> C) (X - moyenne) / écart-type</label>
+        </div>
 
-        // التنقل بين الصفحات
-        window.showPage = (id) => {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page');
-        }
+        <div class="question-block">
+            <p class="question">8. Dans une loi Binomiale, si on répète 10 fois un test avec 20% de succès, l'espérance mathématique E(X) est :</p>
+            <label><input type="radio" name="q8" value="A"> A) 2 (Calcul : 10 * 0.2)</label>
+            <label><input type="radio" name="q8" value="B"> B) 8</label>
+            <label><input type="radio" name="q8" value="C"> C) 0.5</label>
+        </div>
 
-        // حاسبة الضرائب (المحفوظة)
-        window.calculateTax = () => {
-            const r = parseFloat(document.getElementById('rev').value) || 0;
-            const x = parseFloat(document.getElementById('exp').value) || 0;
-            const profit = r - x;
-            const tax = profit > 0 ? profit * 0.20 : 0; // افتراض نسبة 20% ضريبة
-            const res = document.getElementById('calcRes');
-            
-            res.className = profit > 0 ? "card-zellige bg-green-50 border-green-200 text-green-800" : "card-zellige bg-red-50 border-red-200 text-red-800";
-            res.innerHTML = `
-                <h4 class="font-bold text-xl mb-2">التحليل المالي</h4>
-                <p>الربح الصافي: ${profit.toLocaleString()} درهم</p>
-                <p>الضريبة التقديرية (IS): ${tax.toLocaleString()} درهم</p>
-                <div class="mt-3 font-bold uppercase tracking-widest">${profit > 0 ? 'الوضع إيجابي ✓' : 'الوضع سلبي ⚠️'}</div>
-            `;
-        }
+        <div class="question-block">
+            <p class="question">9. La courbe représentative de la loi Normale a la forme :</p>
+            <label><input type="radio" name="q9" value="A"> A) D'une droite croissante</label>
+            <label><input type="radio" name="q9" value="B"> B) D'une cloche symétrique</label>
+            <label><input type="radio" name="q9" value="C"> C) D'un escalier</label>
+        </div>
 
-        // إرسال البيانات لـ Firebase
-        document.getElementById('contactForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const status = document.getElementById('status');
-            btn.innerText = "جاري الإرسال...";
+        <div class="question-block">
+            <p class="question">10. Si le salaire moyen est de 5000 et l'écart-type de 1000, un salaire de 6000 a un Z (valeur centrée réduite) de :</p>
+            <label><input type="radio" name="q10" value="A"> A) 0</label>
+            <label><input type="radio" name="q10" value="B"> B) 1</label>
+            <label><input type="radio" name="q10" value="C"> C) -1</label>
+        </div>
 
-            try {
-                await addDoc(collection(db, "messages"), {
-                    sender_name: document.getElementById('name').value,
-                    sender_email: document.getElementById('email').value,
-                    sender_role: document.getElementById('role').value,
-                    sender_ice: document.getElementById('ice').value || "غير مسجل",
-                    content: document.getElementById('message').value,
-                    time: serverTimestamp()
-                });
-                status.innerText = "وصلت رسالتك يا عبد العزيز بنجاح! راجع لوحة تحكم Firebase.";
-                status.className = "mt-4 text-center block text-green-600";
-                e.target.reset();
-            } catch (err) {
-                status.innerText = "خطأ: تأكد من تفعيل Firestore في Firebase.";
-                status.className = "mt-4 text-center block text-red-600";
-            }
-            btn.innerText = "إرسال لـ عبد العزيز ۞";
-        }
-    </script>
+        <div class="question-block">
+            <p class="question">11. Si on a 3 employés gagnant 3000, 4000 et 5000. Quelle est la moyenne ?</p>
+            <label><input type="radio" name="q11" value="A"> A) 4000</label>
+            <label><input type="radio" name="q11" value="B"> B) 4500</label>
+            <label><input type="radio" name="q11" value="C"> C) 3500</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">12. Pour le même échantillon (3000, 4000, 5000), la médiane est :</p>
+            <label><input type="radio" name="q12" value="A"> A) 3000</label>
+            <label><input type="radio" name="q12" value="B"> B) 4000</label>
+            <label><input type="radio" name="q12" value="C"> C) 5000</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">13. La somme des carrés des écarts à la moyenne divisée par l'effectif total correspond à :</p>
+            <label><input type="radio" name="q13" value="A"> A) L'écart-type</label>
+            <label><input type="radio" name="q13" value="B"> B) La variance</label>
+            <label><input type="radio" name="q13" value="C"> C) L'étendue</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">14. La formule de Koenig pour la variance est :</p>
+            <label><input type="radio" name="q14" value="A"> A) Moyenne des carrés - Carré de la moyenne</label>
+            <label><input type="radio" name="q14" value="B"> B) Carré de la moyenne - Moyenne des carrés</label>
+            <label><input type="radio" name="q14" value="C"> C) Racine de la moyenne</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">15. Pour corriger le biais d'estimation de la variance sur un petit échantillon (n), on multiplie par :</p>
+            <label><input type="radio" name="q15" value="A"> A) n / (n-1)</label>
+            <label><input type="radio" name="q15" value="B"> B) (n-1) / n</label>
+            <label><input type="radio" name="q15" value="C"> C) 1 / n</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">16. Vous voulez comparer la dispersion des salaires (en DH) et de l'ancienneté (en années). Quel indicateur utiliser ?</p>
+            <label><input type="radio" name="q16" value="A"> A) L'écart-type</label>
+            <label><input type="radio" name="q16" value="B"> B) Le coefficient de corrélation</label>
+            <label><input type="radio" name="q16" value="C"> C) Le coefficient de variation (CV)</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">17. Le niveau de confiance classique utilisé pour un intervalle de confiance en sciences économiques est souvent :</p>
+            <label><input type="radio" name="q17" value="A"> A) 50%</label>
+            <label><input type="radio" name="q17" value="B"> B) 95%</label>
+            <label><input type="radio" name="q17" value="C"> C) 100%</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">18. Dans un test d'hypothèse, le "risque alpha" (risque de première espèce) représente la probabilité de :</p>
+            <label><input type="radio" name="q18" value="A"> A) Rejeter H0 alors qu'elle est vraie</label>
+            <label><input type="radio" name="q18" value="B"> B) Accepter H0 alors qu'elle est fausse</label>
+            <label><input type="radio" name="q18" value="C"> C) Ne faire aucune erreur</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">19. Si l'intervalle de confiance d'une moyenne est [4000; 6000], la marge d'erreur est de :</p>
+            <label><input type="radio" name="q19" value="A"> A) 2000</label>
+            <label><input type="radio" name="q19" value="B"> B) 1000</label>
+            <label><input type="radio" name="q19" value="C"> C) 5000</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">20. Plus la taille de l'échantillon augmente, la largeur de l'intervalle de confiance :</p>
+            <label><input type="radio" name="q20" value="A"> A) Augmente</label>
+            <label><input type="radio" name="q20" value="B"> B) Diminue</label>
+            <label><input type="radio" name="q20" value="C"> C) Reste identique</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">21. Vous étudiez le lien entre le Salaire (X) et les Dépenses (Y). La Covariance est calculée à 15000. Cela signifie que :</p>
+            <label><input type="radio" name="q21" value="A"> A) X et Y varient en sens opposé</label>
+            <label><input type="radio" name="q21" value="B"> B) X et Y varient dans le même sens</label>
+            <label><input type="radio" name="q21" value="C"> C) Il n'y a aucun lien entre X et Y</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">22. Le coefficient de corrélation linéaire r est toujours compris entre :</p>
+            <label><input type="radio" name="q22" value="A"> A) 0 et 100</label>
+            <label><input type="radio" name="q22" value="B"> B) -1 et 1</label>
+            <label><input type="radio" name="q22" value="C"> C) -∞ et +∞</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">23. Si r = -0.98 entre le prix d'un produit et les ventes, la liaison est :</p>
+            <label><input type="radio" name="q23" value="A"> A) Forte et négative</label>
+            <label><input type="radio" name="q23" value="B"> B) Faible et négative</label>
+            <label><input type="radio" name="q23" value="C"> C) Forte et positive</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">24. Pour obtenir r, on divise la covariance par :</p>
+            <label><input type="radio" name="q24" value="A"> A) Le produit des moyennes</label>
+            <label><input type="radio" name="q24" value="B"> B) Le produit des variances</label>
+            <label><input type="radio" name="q24" value="C"> C) Le produit des écart-types</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">25. Le test du Khi-Deux (χ²) s'applique pour étudier le lien entre deux variables :</p>
+            <label><input type="radio" name="q25" value="A"> A) Quantitatives continues</label>
+            <label><input type="radio" name="q25" value="B"> B) Qualitatives</label>
+            <label><input type="radio" name="q25" value="C"> C) Indépendantes par nature</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">26. Dans le tableau de contingence du Khi-Deux, les "effectifs théoriques" représentent la situation où :</p>
+            <label><input type="radio" name="q26" value="A"> A) Les variables sont parfaitement dépendantes</label>
+            <label><input type="radio" name="q26" value="B"> B) Les variables sont totalement indépendantes</label>
+            <label><input type="radio" name="q26" value="C"> C) Les données sont fausses</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">27. Comment calcule-t-on l'effectif théorique d'une case (Total ligne L, Total colonne C, Total général N) ?</p>
+            <label><input type="radio" name="q27" value="A"> A) (L * C) / N</label>
+            <label><input type="radio" name="q27" value="B"> B) L + C - N</label>
+            <label><input type="radio" name="q27" value="C"> C) (L / C) * N</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">28. Si le Khi-deux calculé est supérieur au Khi-deux lu dans la table (seuil critique), que décide-t-on ?</p>
+            <label><input type="radio" name="q28" value="A"> A) On accepte H0 (Indépendance)</label>
+            <label><input type="radio" name="q28" value="B"> B) On rejette H0 (Les variables sont liées)</label>
+            <label><input type="radio" name="q28" value="C"> C) On doit refaire l'échantillon</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">29. L'équation d'une droite de régression linéaire est de type Y = aX + b. Le paramètre "a" s'obtient par :</p>
+            <label><input type="radio" name="q29" value="A"> A) Covariance(X,Y) / Variance(X)</label>
+            <label><input type="radio" name="q29" value="B"> B) Variance(X) / Covariance(X,Y)</label>
+            <label><input type="radio" name="q29" value="C"> C) Covariance(X,Y) / Ecart-type(X)</label>
+        </div>
+
+        <div class="question-block">
+            <p class="question">30. Si la droite de régression est Y = -20X + 500. Que se passe-t-il quand X augmente de 1 ?</p>
+            <label><input type="radio" name="q30" value="A"> A) Y augmente de 500</label>
+            <label><input type="radio" name="q30" value="B"> B) Y diminue de 20</label>
+            <label><input type="radio" name="q30" value="C"> C) Y augmente de 20</label>
+        </div>
+
+        <button type="button" onclick="alert('Pour l\'auto-correction, consultez le cours ! Bonne préparation pour vos examens.')">Soumettre les réponses</button>
+    </form>
+</div>
+
 </body>
 </html>
