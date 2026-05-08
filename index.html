@@ -1,242 +1,706 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz : Traitement et Analyse des Données</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .question-block { margin-bottom: 25px; padding: 15px; background: #fafafa; border-left: 4px solid #3498db; border-radius: 4px; }
-        p.question { font-weight: bold; margin-top: 0; }
-        label { display: block; margin-bottom: 8px; cursor: pointer; }
-        input[type="radio"] { margin-right: 10px; }
-        button { display: block; width: 100%; padding: 15px; background: #3498db; color: white; border: none; font-size: 18px; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
-        button:hover { background: #2980b9; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio — Développeur Full Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0b;
+    --surface: #141413;
+    --border: rgba(255,255,255,0.08);
+    --accent: #c8a96e;
+    --accent2: #7eb5a6;
+    --text: #e8e4dc;
+    --muted: #7a756c;
+    --serif: 'Playfair Display', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Cursor ── */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.25s ease;
+    opacity: 0.5;
+  }
+
+  /* ── Noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(12,12,11,0.9);
+    border-color: var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── Sections ── */
+  section { padding: 7rem 3rem; max-width: 1100px; margin: 0 auto; }
+
+  /* ── Hero ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+    max-width: 100%;
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin-top: 2rem;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0c0c0b;
+  }
+  .btn-primary:hover { background: #d4b87a; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    animation: slideLine 2s 1.5s infinite;
+  }
+  .scroll-text {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Section header ── */
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .sec-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 3rem;
+  }
+
+  /* ── About ── */
+  #about {
+    border-top: 1px solid var(--border);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 400; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .stat-box {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    background: var(--surface);
+  }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Skills ── */
+  #skills { border-top: 1px solid var(--border); }
+  .skills-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    background: var(--border);
+    margin-top: 0;
+  }
+  .skill-item {
+    background: var(--bg);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: background 0.2s;
+  }
+  .skill-item:hover { background: var(--surface); }
+  .skill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    flex-shrink: 0;
+  }
+  .skill-name {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+
+  /* ── Projects ── */
+  #projects { border-top: 1px solid var(--border); }
+  .projects-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .project-card {
+    border: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    background: var(--surface);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .project-card:hover {
+    border-color: rgba(200,169,110,0.4);
+    transform: translateX(6px);
+  }
+  .project-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+  .project-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+  .project-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .project-arrow {
+    font-size: 1.5rem;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+    margin-top: 0.2rem;
+  }
+  .project-card:hover .project-arrow {
+    color: var(--accent);
+    transform: translate(4px, -4px);
+  }
+
+  /* ── Contact ── */
+  #contact {
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  #contact .sec-title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .contact-sub {
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 3rem;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+  }
+  .contact-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.2rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .contact-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  footer span {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideLine {
+    0%   { left: -100%; }
+    50%  { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    #hero { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-scroll { left: 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+  }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h1>QCM Évaluation : Traitement des Données mn le pére de vendredi </h1>
-    <p><em>Contexte : Vous menez une étude sur les performances et habitudes des employés d'une grande coopérative (salaires, ancienneté, satisfaction) solo group C ma3ndnache M3a lkhrine . Répondez aux questions suivantes pour traiter vos données.</em></p>
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-    <form id="dataQuiz">
+<!-- Navigation -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">LDV.</a>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#skills">Compétences</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-        <div class="question-block">
-            <p class="question">1. Le "Niveau de satisfaction" (Faible, Moyen, Élevé) recueilli par questionnaire est une variable :</p>
-            <label><input type="radio" name="q1" value="A"> A) Quantitative continue</label>
-            <label><input type="radio" name="q1" value="B"> B) Qualitative ordinale</label>
-            <label><input type="radio" name="q1" value="C"> C) Qualitative nominale</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">2. Vous divisez les employés en cadres et ouvriers, puis vous tirez au sort dans chaque groupe proportionnellement. C'est un échantillonnage :</p>
-            <label><input type="radio" name="q2" value="A"> A) Aléatoire simple</label>
-            <label><input type="radio" name="q2" value="B"> B) Par quotas</label>
-            <label><input type="radio" name="q2" value="C"> C) Stratifié</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">3. "L'ancienneté en années complètes" (ex: 2 ans, 5 ans) est une variable :</p>
-            <label><input type="radio" name="q3" value="A"> A) Quantitative discrète</label>
-            <label><input type="radio" name="q3" value="B"> B) Quantitative continue</label>
-            <label><input type="radio" name="q3" value="C"> C) Qualitative</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">4. Les données récupérées directement depuis les fiches de paie préexistantes de l'entreprise sont des données :</p>
-            <label><input type="radio" name="q4" value="A"> A) Primaires</label>
-            <label><input type="radio" name="q4" value="B"> B) Secondaires</label>
-            <label><input type="radio" name="q4" value="C"> C) Tertiaires</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">5. Lequel de ces indicateurs n'est PAS un paramètre de dispersion ?</p>
-            <label><input type="radio" name="q5" value="A"> A) La variance</label>
-            <label><input type="radio" name="q5" value="B"> B) L'écart-type</label>
-            <label><input type="radio" name="q5" value="C"> C) Le Mode</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">6. Le nombre de machines tombant en panne par jour est un événement rare. Il suit probablement une loi :</p>
-            <label><input type="radio" name="q6" value="A"> A) Normale</label>
-            <label><input type="radio" name="q6" value="B"> B) De Poisson</label>
-            <label><input type="radio" name="q6" value="C"> C) Binomiale</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">7. Pour utiliser la table de la loi normale centrée réduite N(0,1), on utilise la formule de transformation Z = :</p>
-            <label><input type="radio" name="q7" value="A"> A) (X - écart-type) / moyenne</label>
-            <label><input type="radio" name="q7" value="B"> B) (X - moyenne) / variance</label>
-            <label><input type="radio" name="q7" value="C"> C) (X - moyenne) / écart-type</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">8. Dans une loi Binomiale, si on répète 10 fois un test avec 20% de succès, l'espérance mathématique E(X) est :</p>
-            <label><input type="radio" name="q8" value="A"> A) 2 (Calcul : 10 * 0.2)</label>
-            <label><input type="radio" name="q8" value="B"> B) 8</label>
-            <label><input type="radio" name="q8" value="C"> C) 0.5</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">9. La courbe représentative de la loi Normale a la forme :</p>
-            <label><input type="radio" name="q9" value="A"> A) D'une droite croissante</label>
-            <label><input type="radio" name="q9" value="B"> B) D'une cloche symétrique</label>
-            <label><input type="radio" name="q9" value="C"> C) D'un escalier</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">10. Si le salaire moyen est de 5000 et l'écart-type de 1000, un salaire de 6000 a un Z (valeur centrée réduite) de :</p>
-            <label><input type="radio" name="q10" value="A"> A) 0</label>
-            <label><input type="radio" name="q10" value="B"> B) 1</label>
-            <label><input type="radio" name="q10" value="C"> C) -1</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">11. Si on a 3 employés gagnant 3000, 4000 et 5000. Quelle est la moyenne ?</p>
-            <label><input type="radio" name="q11" value="A"> A) 4000</label>
-            <label><input type="radio" name="q11" value="B"> B) 4500</label>
-            <label><input type="radio" name="q11" value="C"> C) 3500</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">12. Pour le même échantillon (3000, 4000, 5000), la médiane est :</p>
-            <label><input type="radio" name="q12" value="A"> A) 3000</label>
-            <label><input type="radio" name="q12" value="B"> B) 4000</label>
-            <label><input type="radio" name="q12" value="C"> C) 5000</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">13. La somme des carrés des écarts à la moyenne divisée par l'effectif total correspond à :</p>
-            <label><input type="radio" name="q13" value="A"> A) L'écart-type</label>
-            <label><input type="radio" name="q13" value="B"> B) La variance</label>
-            <label><input type="radio" name="q13" value="C"> C) L'étendue</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">14. La formule de Koenig pour la variance est :</p>
-            <label><input type="radio" name="q14" value="A"> A) Moyenne des carrés - Carré de la moyenne</label>
-            <label><input type="radio" name="q14" value="B"> B) Carré de la moyenne - Moyenne des carrés</label>
-            <label><input type="radio" name="q14" value="C"> C) Racine de la moyenne</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">15. Pour corriger le biais d'estimation de la variance sur un petit échantillon (n), on multiplie par :</p>
-            <label><input type="radio" name="q15" value="A"> A) n / (n-1)</label>
-            <label><input type="radio" name="q15" value="B"> B) (n-1) / n</label>
-            <label><input type="radio" name="q15" value="C"> C) 1 / n</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">16. Vous voulez comparer la dispersion des salaires (en DH) et de l'ancienneté (en années). Quel indicateur utiliser ?</p>
-            <label><input type="radio" name="q16" value="A"> A) L'écart-type</label>
-            <label><input type="radio" name="q16" value="B"> B) Le coefficient de corrélation</label>
-            <label><input type="radio" name="q16" value="C"> C) Le coefficient de variation (CV)</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">17. Le niveau de confiance classique utilisé pour un intervalle de confiance en sciences économiques est souvent :</p>
-            <label><input type="radio" name="q17" value="A"> A) 50%</label>
-            <label><input type="radio" name="q17" value="B"> B) 95%</label>
-            <label><input type="radio" name="q17" value="C"> C) 100%</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">18. Dans un test d'hypothèse, le "risque alpha" (risque de première espèce) représente la probabilité de :</p>
-            <label><input type="radio" name="q18" value="A"> A) Rejeter H0 alors qu'elle est vraie</label>
-            <label><input type="radio" name="q18" value="B"> B) Accepter H0 alors qu'elle est fausse</label>
-            <label><input type="radio" name="q18" value="C"> C) Ne faire aucune erreur</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">19. Si l'intervalle de confiance d'une moyenne est [4000; 6000], la marge d'erreur est de :</p>
-            <label><input type="radio" name="q19" value="A"> A) 2000</label>
-            <label><input type="radio" name="q19" value="B"> B) 1000</label>
-            <label><input type="radio" name="q19" value="C"> C) 5000</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">20. Plus la taille de l'échantillon augmente, la largeur de l'intervalle de confiance :</p>
-            <label><input type="radio" name="q20" value="A"> A) Augmente</label>
-            <label><input type="radio" name="q20" value="B"> B) Diminue</label>
-            <label><input type="radio" name="q20" value="C"> C) Reste identique</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">21. Vous étudiez le lien entre le Salaire (X) et les Dépenses (Y). La Covariance est calculée à 15000. Cela signifie que :</p>
-            <label><input type="radio" name="q21" value="A"> A) X et Y varient en sens opposé</label>
-            <label><input type="radio" name="q21" value="B"> B) X et Y varient dans le même sens</label>
-            <label><input type="radio" name="q21" value="C"> C) Il n'y a aucun lien entre X et Y</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">22. Le coefficient de corrélation linéaire r est toujours compris entre :</p>
-            <label><input type="radio" name="q22" value="A"> A) 0 et 100</label>
-            <label><input type="radio" name="q22" value="B"> B) -1 et 1</label>
-            <label><input type="radio" name="q22" value="C"> C) -∞ et +∞</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">23. Si r = -0.98 entre le prix d'un produit et les ventes, la liaison est :</p>
-            <label><input type="radio" name="q23" value="A"> A) Forte et négative</label>
-            <label><input type="radio" name="q23" value="B"> B) Faible et négative</label>
-            <label><input type="radio" name="q23" value="C"> C) Forte et positive</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">24. Pour obtenir r, on divise la covariance par :</p>
-            <label><input type="radio" name="q24" value="A"> A) Le produit des moyennes</label>
-            <label><input type="radio" name="q24" value="B"> B) Le produit des variances</label>
-            <label><input type="radio" name="q24" value="C"> C) Le produit des écart-types</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">25. Le test du Khi-Deux (χ²) s'applique pour étudier le lien entre deux variables :</p>
-            <label><input type="radio" name="q25" value="A"> A) Quantitatives continues</label>
-            <label><input type="radio" name="q25" value="B"> B) Qualitatives</label>
-            <label><input type="radio" name="q25" value="C"> C) Indépendantes par nature</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">26. Dans le tableau de contingence du Khi-Deux, les "effectifs théoriques" représentent la situation où :</p>
-            <label><input type="radio" name="q26" value="A"> A) Les variables sont parfaitement dépendantes</label>
-            <label><input type="radio" name="q26" value="B"> B) Les variables sont totalement indépendantes</label>
-            <label><input type="radio" name="q26" value="C"> C) Les données sont fausses</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">27. Comment calcule-t-on l'effectif théorique d'une case (Total ligne L, Total colonne C, Total général N) ?</p>
-            <label><input type="radio" name="q27" value="A"> A) (L * C) / N</label>
-            <label><input type="radio" name="q27" value="B"> B) L + C - N</label>
-            <label><input type="radio" name="q27" value="C"> C) (L / C) * N</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">28. Si le Khi-deux calculé est supérieur au Khi-deux lu dans la table (seuil critique), que décide-t-on ?</p>
-            <label><input type="radio" name="q28" value="A"> A) On accepte H0 (Indépendance)</label>
-            <label><input type="radio" name="q28" value="B"> B) On rejette H0 (Les variables sont liées)</label>
-            <label><input type="radio" name="q28" value="C"> C) On doit refaire l'échantillon</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">29. L'équation d'une droite de régression linéaire est de type Y = aX + b. Le paramètre "a" s'obtient par :</p>
-            <label><input type="radio" name="q29" value="A"> A) Covariance(X,Y) / Variance(X)</label>
-            <label><input type="radio" name="q29" value="B"> B) Variance(X) / Covariance(X,Y)</label>
-            <label><input type="radio" name="q29" value="C"> C) Covariance(X,Y) / Ecart-type(X)</label>
-        </div>
-
-        <div class="question-block">
-            <p class="question">30. Si la droite de régression est Y = -20X + 500. Que se passe-t-il quand X augmente de 1 ?</p>
-            <label><input type="radio" name="q30" value="A"> A) Y augmente de 500</label>
-            <label><input type="radio" name="q30" value="B"> B) Y diminue de 20</label>
-            <label><input type="radio" name="q30" value="C"> C) Y augmente de 20</label>
-        </div>
-
-        <button type="button" onclick="alert('Pour l\'auto-correction, consultez le cours ! Bonne préparation pour vos examens.')">Soumettre les réponses</button>
-    </form>
+<!-- Hero -->
+<div style="position:relative;">
+  <section id="hero">
+    <p class="hero-eyebrow">Développeur Full Stack &amp; Designer</p>
+    <h1 class="hero-title">
+      Je crée des<br>
+      <em>expériences</em><br>
+      numériques.
+    </h1>
+    <p class="hero-sub">
+      Passionné par le code propre, le design minimaliste et les interfaces qui font la différence. Basé à Fès, Maroc.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+      <a href="#contact" class="btn btn-outline">Me contacter</a>
+    </div>
+  </section>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Défiler</span>
+  </div>
 </div>
 
+<!-- About -->
+<section id="about">
+  <div class="reveal">
+    <p class="sec-label">01 — À propos</p>
+    <h2 class="sec-title">Qui suis-je ?</h2>
+  </div>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>Je suis un développeur full stack avec <strong>5 ans d'expérience</strong> dans la création d'applications web modernes. Mon approche combine rigueur technique et sens du détail visuel.</p>
+      <p>J'aime travailler sur des projets ambitieux — des outils de scraping aux plateformes SaaS — en mettant toujours l'utilisateur au centre de chaque décision.</p>
+      <p>En dehors du code, je m'intéresse à la <strong>typographie</strong>, aux <strong>systèmes de design</strong> et aux <strong>nouvelles approches d'IA</strong> appliquées au développement.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num" data-target="50">0</div>
+        <div class="stat-label">Projets livrés</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-label">Années d'expérience</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" data-target="30">0</div>
+        <div class="stat-label">Clients satisfaits</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" data-target="12">0</div>
+        <div class="stat-label">Technologies maîtrisées</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="reveal">
+    <p class="sec-label">02 — Compétences</p>
+    <h2 class="sec-title">Mon arsenal technique</h2>
+  </div>
+  <div class="skills-list reveal">
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">Python / Flask</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">JavaScript / Node.js</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">React / Next.js</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">HTML / CSS</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">PostgreSQL / MongoDB</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">Docker / DevOps</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">Web Scraping</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">UI / UX Design</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">REST API / GraphQL</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">Git / GitHub</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">AWS / Vercel</span></div>
+    <div class="skill-item"><span class="skill-dot"></span><span class="skill-name">Pandas / Data Analysis</span></div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="reveal">
+    <p class="sec-label">03 — Projets</p>
+    <h2 class="sec-title">Travaux récents</h2>
+  </div>
+  <div class="projects-grid">
+    <a href="#" class="project-card reveal">
+      <div>
+        <p class="project-num">Projet 01</p>
+        <h3 class="project-title">DataHarvest — Web Scraper</h3>
+        <p class="project-desc">Application full stack de scraping web avec export Excel. Interface moderne, backend Flask, extraction intelligente de tables, headlines et produits.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">BeautifulSoup</span>
+          <span class="tag">Pandas</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+    <a href="#" class="project-card reveal">
+      <div>
+        <p class="project-num">Projet 02</p>
+        <h3 class="project-title">E-Commerce Platform</h3>
+        <p class="project-desc">Plateforme de vente en ligne complète avec panier, paiement Stripe, gestion des commandes et tableau de bord analytique en temps réel.</p>
+        <div class="project-tags">
+          <span class="tag">Next.js</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Stripe</span>
+          <span class="tag">Tailwind</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+    <a href="#" class="project-card reveal">
+      <div>
+        <p class="project-num">Projet 03</p>
+        <h3 class="project-title">AI Dashboard Analytics</h3>
+        <p class="project-desc">Tableau de bord d'analyse de données avec intégration d'IA pour la détection d'anomalies et la prédiction de tendances business.</p>
+        <div class="project-tags">
+          <span class="tag">React</span>
+          <span class="tag">Python</span>
+          <span class="tag">OpenAI API</span>
+          <span class="tag">D3.js</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="reveal">
+    <p class="sec-label">04 — Contact</p>
+    <h2 class="sec-title">Travaillons<br><em>ensemble.</em></h2>
+    <p class="contact-sub">Un projet en tête ? Je suis disponible pour des missions freelance et des collaborations long terme.</p>
+    <a href="mailto:votre@email.com" class="btn btn-primary">Envoyer un message</a>
+  </div>
+  <div class="contact-links reveal">
+    <a href="https://github.com/abdelaziz-hibatallah" class="contact-link" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/abdelaziz-hibat-allah/" class="contact-link" target="_blank">LinkedIn</a>
+    <a href="https://x.com/h_ika_b" class="contact-link" target="_blank">X</a>
+    <a href="azizehibatallah@gmail.com" class="contact-link">Email</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span>© 2026 — Tous droits réservés</span>
+  <span>Conçu &amp; développé avec Abdelaziz HIBAT ALLAH♥</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = (mx - 4) + 'px';
+    cursor.style.top  = (my - 4) + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = (rx - 18) + 'px';
+    ring.style.top  = (ry - 18) + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  // Nav scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Animated counters
+  function animateCounter(el, target, duration) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = Math.round(start) + (target >= 10 ? '+' : '');
+      if (start >= target) clearInterval(timer);
+    }, 16);
+  }
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('[data-target]');
+        nums.forEach(n => animateCounter(n, parseInt(n.dataset.target), 1200));
+        statObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  const statsSection = document.querySelector('.stats-grid');
+  if (statsSection) statObserver.observe(statsSection);
+
+  // Smooth active nav link highlight
+  const sections = document.querySelectorAll('section[id], div[id="hero"]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 200) current = sec.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? 'var(--text)' : '';
+    });
+  });
+</script>
 </body>
 </html>
