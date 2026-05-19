@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <title>عطيني درهم – الموقع الرسمي للفقر المغربي 🇲🇦</title>
+  <meta name="description" content="موقع مغربي بكل فخر. سؤال واحد بس: عطيني درهم؟ الجواب في يدك، لكن اللّي يقول لا... هاك فقيره تمك 😤" />
+  <meta name="keywords" content="عطيني درهم, مغرب, نكتة مغربية, درهم, فقيرة تمك, لعز بالرجال" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="واحد محتاج للدراهم" />
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="عطيني درهم 💸" />
+  <meta property="og:description" content="سؤال بسيط، جواب صعب. شوف واش راك رجل ولا لا 😂 #مغرب" />
+  <meta property="og:url" content="https://3tini-dirham.ma" />
+  <meta property="og:image" content="https://placehold.co/1200x630/0a0a0a/f5c518?text=عطيني+درهم+💸" />
+  <meta property="og:locale" content="ar_MA" />
+  <meta property="og:site_name" content="عطيني درهم" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="عطيني درهم 💸" />
+  <meta name="twitter:description" content="سؤال بسيط، جواب صعب. شوف واش راك رجل ولا لا 😂" />
+  <meta name="twitter:image" content="https://placehold.co/1200x630/0a0a0a/f5c518?text=عطيني+درهم+💸" />
+
+  <!-- Font: Tajawal for Arabic - distinctive and modern -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;800;900&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --bg:        #080810;
+      --surface:   #111120;
+      --border:    #1e1e38;
+      --gold:      #f5c518;
+      --gold-dim:  #c9a012;
+      --red:       #e63946;
+      --red-dim:   #b02b36;
+      --text:      #eaeaf5;
+      --muted:     #6b6b8a;
+      --green:     #2ec4b6;
+      --radius:    18px;
+      --shadow:    0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background grid ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,197,24,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,197,24,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Radial glow blob ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse, rgba(245,197,24,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: blobPulse 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes blobPulse {
+      from { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      to   { opacity: 1;   transform: translateX(-50%) scale(1.15); }
+    }
+
+    /* ── Main Layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    /* ── Coin decoration ── */
+    .coin-ring {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 0 30px rgba(245,197,24,0.3), inset 0 0 20px rgba(245,197,24,0.05);
+      animation: spinGlow 4s ease-in-out infinite;
+      background: radial-gradient(circle at 35% 35%, rgba(245,197,24,0.12), transparent 70%);
+    }
+
+    @keyframes spinGlow {
+      0%,100% { box-shadow: 0 0 25px rgba(245,197,24,0.25), inset 0 0 15px rgba(245,197,24,0.05); }
+      50%      { box-shadow: 0 0 55px rgba(245,197,24,0.55), inset 0 0 25px rgba(245,197,24,0.12); }
+    }
+
+    /* ── Heading ── */
+    h1 {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #f5c518 0%, #fff3a0 40%, #e8a805 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+      animation: fadeDown 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      filter: drop-shadow(0 0 30px rgba(245,197,24,0.4));
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2.8rem;
+      animation: fadeDown 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+      font-weight: 300;
+    }
+
+    /* ── Button Group ── */
+    .btn-group {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .btn {
+      font-family: 'Cairo', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 0.85rem 3rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.18s, box-shadow 0.18s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.18s;
+    }
+    .btn:hover::after { background: rgba(255,255,255,0.08); }
+
+    .btn:active { transform: scale(0.96) !important; }
+
+    /* ripple */
+    .btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleAnim 0.55s linear;
+      background: rgba(255,255,255,0.25);
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* Yes button */
+    .btn-yes {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: #000;
+      box-shadow: 0 4px 25px rgba(245,197,24,0.35);
+    }
+    .btn-yes:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(245,197,24,0.55);
+    }
+
+    /* No button */
+    .btn-no {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .btn-no:hover {
+      transform: translateY(-3px);
+      border-color: var(--red);
+      color: var(--red);
+      box-shadow: 0 8px 30px rgba(230,57,70,0.25);
+    }
+
+    /* ── Response Panels ── */
+    .response {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      animation: fadeScaleIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .response.visible { display: flex; }
+
+    /* Yes Response */
+    .account-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem 2rem;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+    .account-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--green), var(--gold));
+      background-size: 200%;
+      animation: shimmerBar 2.5s linear infinite;
+    }
+    @keyframes shimmerBar {
+      from { background-position: 200% center; }
+      to   { background-position: -200% center; }
+    }
+
+    .account-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.6rem;
+    }
+    .account-number {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(1rem, 4vw, 1.35rem);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 3px;
+      word-break: break-all;
+      direction: ltr;
+    }
+
+    .bank-name {
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .copy-btn {
+      background: rgba(245,197,24,0.1);
+      border: 1px solid rgba(245,197,24,0.25);
+      color: var(--gold);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.28rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .copy-btn:hover { background: rgba(245,197,24,0.2); transform: scale(1.05); }
+
+    .thank-msg {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-weight: 900;
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(46,196,182,0.4);
+    }
+
+    /* No Response */
+    .no-msg {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(1.8rem, 7vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.25;
+      background: linear-gradient(135deg, var(--red), #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(230,57,70,0.5));
+      animation: shakeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .no-emoji {
+      font-size: 4rem;
+      animation: bounceIn 0.6s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Retry button */
+    .retry-btn {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1.4rem;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: color 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .retry-btn:hover { color: var(--text); border-color: var(--muted); transform: scale(1.04); }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeScaleIn {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shakeIn {
+      0%   { opacity: 0; transform: translateX(20px); }
+      30%  { transform: translateX(-10px); }
+      60%  { transform: translateX(6px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes bounceIn {
+      0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+      60%  { transform: scale(1.2) rotate(5deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(8,8,16,0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .footer-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      transition: transform 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .social-link:hover { transform: translateY(-4px) scale(1.08); }
+    .social-link.instagram:hover { color: #e1306c; border-color: #e1306c; box-shadow: 0 6px 20px rgba(225,48,108,0.3); }
+    .social-link.twitter:hover   { color: #1da1f2; border-color: #1da1f2; box-shadow: 0 6px 20px rgba(29,161,242,0.3); }
+    .social-link.facebook:hover  { color: #1877f2; border-color: #1877f2; box-shadow: 0 6px 20px rgba(24,119,242,0.3); }
+    .social-link.tiktok:hover    { color: #69c9d0; border-color: #69c9d0; box-shadow: 0 6px 20px rgba(105,201,208,0.3); }
+
+    .social-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+    /* ── Responsive ── */
+    @media (max-width: 420px) {
+      .btn { padding: 0.75rem 2rem; font-size: 1.25rem; }
+      .account-number { font-size: 0.9rem; letter-spacing: 1.5px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main>
+    <div class="coin-ring" role="img" aria-label="درهم">💰</div>
+    <h1>عطيني درهم</h1>
+    <p class="subtitle">سؤال من القلب، فكر مليح قبل ما تجاوب 🤔</p>
+
+    <!-- Buttons -->
+    <div class="btn-group" id="btnGroup" role="group" aria-label="خيارات الجواب">
+      <button class="btn btn-yes" id="btnYes" onclick="handleYes(event)" aria-label="نعم، عطيه درهم">
+        نعم ✅
+      </button>
+      <button class="btn btn-no" id="btnNo" onclick="handleNo(event)" aria-label="لا، مانعطيهش">
+        لا ❌
+      </button>
+    </div>
+
+    <!-- YES Response -->
+    <div class="response" id="yesResponse" role="region" aria-live="polite" aria-label="معلومات الحساب البنكي">
+      <div class="account-card">
+        <p class="account-label">رقم الحساب البنكي</p>
+        <p class="account-number" id="accountNum">0000 0000 0000 0000 0000 0000</p>
+        <div class="bank-name">
+          <span>بنك الدراهم المغربية 🇲🇦</span>
+          <button class="copy-btn" onclick="copyAccount()" aria-label="نسخ رقم الحساب">نسخ 📋</button>
+        </div>
+      </div>
+      <p class="thank-msg">لعز بالرجال 🤝</p>
+      <button class="retry-btn" onclick="reset()" aria-label="رجوع للبداية">↩ ارجع للبداية</button>
+    </div>
+
+    <!-- NO Response -->
+    <div class="response" id="noResponse" role="region" aria-live="polite" aria-label="رسالة الرفض">
+      <span class="no-emoji">😤</span>
+      <p class="no-msg">هاك فقيره تمك!</p>
+      <button class="retry-btn" onclick="reset()" aria-label="رجوع للبداية">↩ حاول مرة أخرى</button>
+    </div>
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <nav class="social-links" aria-label="روابط التواصل الاجتماعي">
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/h_ika_b/" class="social-link instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      </a>
+
+      <!-- Twitter / X -->
+      <a href="https://x.com/H_ika_b" class="social-link twitter" aria-label="Twitter / X" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/bdalzyzhybtallh" class="social-link facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+    </nav>
+    <p class="footer-text">صنع بـ ❤️ في المغرب &nbsp;|&nbsp; © 2025 عطيني درهم</p>
+  </footer>
+
+  <script>
+    // ── Ripple effect helper ──
+    function createRipple(e, btn) {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top  - size / 2;
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    }
+
+    // ── Yes handler ──
+    function handleYes(e) {
+      createRipple(e, e.currentTarget);
+      document.getElementById('btnGroup').style.display = 'none';
+      const res = document.getElementById('yesResponse');
+      res.style.display = 'flex';
+      // slight delay so animation fires after display change
+      requestAnimationFrame(() => res.classList.add('visible'));
+    }
+
+    // ── No handler ──
+    function handleNo(e) {
+      createRipple(e, e.currentTarget);
+      document.getElementById('btnGroup').style.display = 'none';
+      const res = document.getElementById('noResponse');
+      res.style.display = 'flex';
+      requestAnimationFrame(() => res.classList.add('visible'));
+    }
+
+    // ── Reset ──
+    function reset() {
+      ['yesResponse', 'noResponse'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('visible');
+        el.style.display = 'none';
+      });
+      document.getElementById('btnGroup').style.display = 'flex';
+    }
+
+    // ── Copy account number ──
+    function copyAccount() {
+      const num = document.getElementById('accountNum').textContent;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(num).then(() => showCopied());
+      } else {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = num;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showCopied();
+      }
+    }
+
+    function showCopied() {
+      const btn = document.querySelector('.copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'تم النسخ ✓';
+      btn.style.background = 'rgba(46,196,182,0.2)';
+      btn.style.borderColor = '#2ec4b6';
+      btn.style.color = '#2ec4b6';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.cssText = '';
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
